@@ -1,6 +1,7 @@
 package com.SweetStock.api.controller;
 
 import com.SweetStock.api.dto.LoginRequest;
+import com.SweetStock.api.dto.RegistroRequest;
 import com.SweetStock.api.model.Usuario;
 import com.SweetStock.api.repository.UsuarioRepository;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,39 @@ public class UsuarioController {
     @GetMapping("/usuarios")
     public List<Usuario> obtenerUsuarios() {
         return usuarioRepository.findAll();
+    }
+
+    @PostMapping("/usuarios")
+    public ResponseEntity<?> registrarUsuario(@RequestBody RegistroRequest request) {
+
+        if (request.getNombre() == null || request.getNombre().trim().isEmpty() ||
+                request.getPassword() == null || request.getPassword().trim().isEmpty() ||
+                request.getRol() == null || request.getRol().trim().isEmpty()) {
+
+            return ResponseEntity.badRequest().body(Map.of("error", "Nombre, contraseña y rol son obligatorios."));
+        }
+        if (request.getPassword().length() < 6) {
+            return ResponseEntity.badRequest().body(Map.of("error", "La contraseña debe tener al menos 6 caracteres."));
+        }
+
+        List<String> rolesPermitidos = List.of("Administrador", "Almacenero", "Vendedor");
+        if (!rolesPermitidos.contains(request.getRol())) {
+            return ResponseEntity.badRequest().body(Map.of("error", "El rol especificado no es válido."));
+        }
+
+        if (usuarioRepository.findByNombre(request.getNombre()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", "El nombre de usuario ya está en uso."));
+        }
+
+        Usuario nuevoUsuario = new Usuario(request.getNombre(), request.getPassword(), request.getRol());
+
+        Usuario usuarioGuardado = usuarioRepository.save(nuevoUsuario);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
+                "mensaje", "Usuario registrado con éxito",
+                "id", usuarioGuardado.getId(),
+                "nombre", usuarioGuardado.getNombre(),
+                "rol", usuarioGuardado.getRol()
+        ));
     }
     
     @PostMapping("/login")
