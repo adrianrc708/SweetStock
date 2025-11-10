@@ -6,6 +6,7 @@ import com.SweetStock.api.model.Usuario;
 import com.SweetStock.api.repository.UsuarioRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 import java.util.List;
 import java.util.Map;
@@ -17,9 +18,11 @@ import org.springframework.http.HttpStatus;
 public class UsuarioController {
 
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioController(UsuarioRepository usuarioRepository) {
+    public UsuarioController(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/usuarios")
@@ -48,8 +51,8 @@ public class UsuarioController {
         if (usuarioRepository.findByNombre(request.getNombre()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", "El nombre de usuario ya está en uso."));
         }
-
-        Usuario nuevoUsuario = new Usuario(request.getNombre(), request.getPassword(), request.getRol());
+        String hashedPassword = passwordEncoder.encode(request.getPassword());
+        Usuario nuevoUsuario = new Usuario(request.getNombre(), hashedPassword, request.getRol());
 
         Usuario usuarioGuardado = usuarioRepository.save(nuevoUsuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
@@ -81,7 +84,7 @@ public class UsuarioController {
 
         // Verificar contraseña
         // TEMPORAL: comparación directa (luego lo cambiamos por BCrypt)
-        if (!usuario.getPassword().equals(request.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), usuario.getPassword())) {
             usuario.setIntentosFallidos(usuario.getIntentosFallidos() + 1);
 
             if (usuario.getIntentosFallidos() >= 3) { // máximo 3 intentos

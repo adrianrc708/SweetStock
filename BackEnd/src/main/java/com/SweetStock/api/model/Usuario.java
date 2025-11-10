@@ -1,6 +1,7 @@
 
 package com.SweetStock.api.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,7 +17,9 @@ public class Usuario {
     private String nombre;
     private String password;
     private String rol;
+    @Column(columnDefinition = "integer default 0")
     private int intentosFallidos = 0;
+    @Column(columnDefinition = "boolean default false")
     private boolean cuentaBloqueada = false;
     private LocalDateTime bloqueoHasta;
     
