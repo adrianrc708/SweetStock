@@ -1,39 +1,66 @@
 import React, { useState } from "react";
 import "./AdminPanel.css";
 import RegistroUsuario from "./RegistroUsuario";
+import ListaUsuarios from "./ListaUsuarios";
+import EditarUsuario from "./EditarUsuario";
 import EliminarUsuario from "./EliminarUsuario";
 
-const VistaGestionUsuarios = ({ onIrARegistro, onIrAEliminar, onVolver }) => {
+const VistaGestionUsuarios = ({ onIrARegistro, onIrAEditar, onIrAEliminar, onVolver }) => {
     return (
         <div className="admin-container">
             <h2 className="admin-titulo">Gestión de Usuarios</h2>
             <div className="user-actions">
                 <button className="admin-boton" onClick={onIrARegistro}>Registrar</button>
-                <button className="admin-boton" onClick={() => {}}>Editar</button>
+                <button className="admin-boton" onClick={onIrAEditar}>Editar</button>
                 <button className="admin-boton" onClick={onIrAEliminar}>Eliminar</button>
             </div>
-            <button className="admin-boton" onClick={onVolver}>← Volver al Panel Principal</button>
+            <button className="admin-boton secondary-button" onClick={onVolver}>← Volver al Panel Principal</button>
         </div>
     );
 };
 
-
 const AdminPanel = ({ usuario }) => {
-    const [vistaActual, setVistaActual] = useState("inicio"); 
+    const [vistaActual, setVistaActual] = useState("inicio");
+    const [usuarioIdEditar, setUsuarioIdEditar] = useState(null);
 
     if (vistaActual === "registrar") {
         return (
             <RegistroUsuario 
-                onRegistroExitoso={() => setVistaActual("usuarios")} 
+                onRegistroExitoso={() => setVistaActual("usuarios")}
                 onVolver={() => setVistaActual("usuarios")}
             />
         );
     }
     
+    if (vistaActual === "editarUsuario" && usuarioIdEditar) {
+        return (
+            <EditarUsuario
+                usuarioId={usuarioIdEditar}
+                usuarioActual={usuario}
+                onEditarExitoso={() => setVistaActual("listaUsuarios")}
+                onVolver={() => setVistaActual("listaUsuarios")}
+            />
+        );
+    }
+
+    if (vistaActual === "listaUsuarios") {
+        return (
+            <ListaUsuarios
+                usuarioActual={usuario}
+                onEditar={(id) => {
+                    setUsuarioIdEditar(id);
+                    setVistaActual("editarUsuario");
+                }}
+                onVolver={() => setVistaActual("usuarios")}
+            />
+        );
+    }
+
     if (vistaActual === "usuarios") {
         return (
             <VistaGestionUsuarios
                 onIrARegistro={() => setVistaActual("registrar")}
+                onIrAEditar={() => setVistaActual("listaUsuarios")}
                 onIrAEliminar={() => setVistaActual("eliminar")}
                 onVolver={() => setVistaActual("inicio")}
             />
