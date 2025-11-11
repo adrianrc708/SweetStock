@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import "./AdminPanel.css";
 import RegistroUsuario from "./RegistroUsuario";
+import EliminarUsuario from "./EliminarUsuario";
 
-const VistaGestionUsuarios = ({ onIrARegistro, onVolver }) => {
+const VistaGestionUsuarios = ({ onIrARegistro, onIrAEliminar, onVolver }) => {
     return (
         <div className="admin-container">
             <h2 className="admin-titulo">Gestión de Usuarios</h2>
             <div className="user-actions">
                 <button className="admin-boton" onClick={onIrARegistro}>Registrar</button>
                 <button className="admin-boton" onClick={() => {}}>Editar</button>
-                <button className="admin-boton" onClick={() => {}}>Eliminar</button>
+                <button className="admin-boton" onClick={onIrAEliminar}>Eliminar</button>
             </div>
             <button className="admin-boton" onClick={onVolver}>← Volver al Panel Principal</button>
         </div>
@@ -33,9 +34,14 @@ const AdminPanel = ({ usuario }) => {
         return (
             <VistaGestionUsuarios
                 onIrARegistro={() => setVistaActual("registrar")}
+                onIrAEliminar={() => setVistaActual("eliminar")}
                 onVolver={() => setVistaActual("inicio")}
             />
         );
+    }
+
+    if (vistaActual === "eliminar") {
+        return <EliminarUsuario onVolver={() => setVistaActual("usuarios")} />;
     }
 
     return (
