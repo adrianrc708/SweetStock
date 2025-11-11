@@ -3,15 +3,16 @@ import "./AdminPanel.css";
 import RegistroUsuario from "./RegistroUsuario";
 import ListaUsuarios from "./ListaUsuarios";
 import EditarUsuario from "./EditarUsuario";
+import EliminarUsuario from "./EliminarUsuario";
 
-const VistaGestionUsuarios = ({ onIrARegistro, onIrAEditar, onVolver }) => {
+const VistaGestionUsuarios = ({ onIrARegistro, onIrAEditar, onIrAEliminar, onVolver }) => {
     return (
         <div className="admin-container">
             <h2 className="admin-titulo">Gestión de Usuarios</h2>
             <div className="user-actions">
                 <button className="admin-boton" onClick={onIrARegistro}>Registrar</button>
                 <button className="admin-boton" onClick={onIrAEditar}>Editar</button>
-                <button className="admin-boton" onClick={() => {}}>Eliminar</button>
+                <button className="admin-boton" onClick={onIrAEliminar}>Eliminar</button>
             </div>
             <button className="admin-boton secondary-button" onClick={onVolver}>← Volver al Panel Principal</button>
         </div>
@@ -60,9 +61,14 @@ const AdminPanel = ({ usuario }) => {
             <VistaGestionUsuarios
                 onIrARegistro={() => setVistaActual("registrar")}
                 onIrAEditar={() => setVistaActual("listaUsuarios")}
+                onIrAEliminar={() => setVistaActual("eliminar")}
                 onVolver={() => setVistaActual("inicio")}
             />
         );
+    }
+
+    if (vistaActual === "eliminar") {
+        return <EliminarUsuario onVolver={() => setVistaActual("usuarios")} />;
     }
 
     return (

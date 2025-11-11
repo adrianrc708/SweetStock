@@ -15,6 +15,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
@@ -25,12 +26,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/usuarios", "/usuarios/**").permitAll()
-                        .anyRequest().authenticated()
-                );
+            // Habilitamos CORS con nuestra configuración personalizada
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            // Desactivamos CSRF (necesario para React)
+            .csrf(AbstractHttpConfigurer::disable)
+            // Permitir todo durante desarrollo
+            .authorizeHttpRequests(auth -> auth
+                .anyRequest().permitAll()
+            );
         return http.build();
     }
 

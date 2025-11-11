@@ -29,6 +29,20 @@ public class UsuarioController {
     public List<Usuario> obtenerUsuarios() {
         return usuarioRepository.findAll();
     }
+    
+    @DeleteMapping("/usuarios/{id}")
+    public ResponseEntity<?> eliminarUsuario(@PathVariable int id) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+
+        if (usuarioOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Usuario no encontrado"));
+        }
+
+        usuarioRepository.deleteById(id);
+        return ResponseEntity.ok(Map.of("mensaje", "Usuario eliminado exitosamente"));
+    }
+
 
     @GetMapping("/usuarios/{id}")
     public ResponseEntity<?> obtenerUsuarioPorId(@PathVariable int id) {
