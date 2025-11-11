@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./RegistroUsuario.css";
+import Modal from "./Modal";
 
 const ROLES = ["Administrador", "Almacenero", "Vendedor"];
 
@@ -10,6 +11,7 @@ const EditarUsuario = ({ usuarioId, onEditarExitoso, onVolver, usuarioActual }) 
     const [error, setError] = useState("");
     const [cargando, setCargando] = useState(true);
     const [nombreOriginal, setNombreOriginal] = useState("");
+    const [modalConfig, setModalConfig] = useState({ isOpen: false, title: "", message: "", type: "info" });
 
     useEffect(() => {
         let isMounted = true;
@@ -86,8 +88,16 @@ const EditarUsuario = ({ usuarioId, onEditarExitoso, onVolver, usuarioActual }) 
                 throw new Error(response.error || "Error al actualizar el usuario");
             }
 
-            alert(`Usuario ${response.nombre} actualizado exitosamente.`);
-            onEditarExitoso();
+            setModalConfig({
+                isOpen: true,
+                title: "¡Éxito!",
+                message: `Usuario ${response.nombre} actualizado exitosamente.`,
+                type: "success",
+                onClose: () => {
+                    setModalConfig({ isOpen: false, title: "", message: "", type: "info" });
+                    onEditarExitoso();
+                }
+            });
         })
         .catch((err) => {
             console.error(err);
@@ -156,6 +166,14 @@ const EditarUsuario = ({ usuarioId, onEditarExitoso, onVolver, usuarioActual }) 
                     <button type="button" onClick={onVolver} className="admin-boton secondary-button">Cancelar</button>
                 </div>
             </form>
+
+            <Modal
+                isOpen={modalConfig.isOpen}
+                onClose={modalConfig.onClose || (() => setModalConfig({ isOpen: false, title: "", message: "", type: "info" }))}
+                title={modalConfig.title}
+                message={modalConfig.message}
+                type={modalConfig.type}
+            />
         </div>
     );
 };

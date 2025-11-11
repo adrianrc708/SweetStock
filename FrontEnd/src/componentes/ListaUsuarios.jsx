@@ -72,7 +72,11 @@ const ListaUsuarios = ({ onEditar, onVolver, usuarioActual }) => {
                                         onClick={() => handleEditar(usuario)}
                                         title="Editar usuario"
                                     >
-                                        ✏️ Editar
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}>
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                        </svg>
+                                        Editar
                                     </button>
                                 </td>
                             </tr>
@@ -86,7 +90,7 @@ const ListaUsuarios = ({ onEditar, onVolver, usuarioActual }) => {
             )}
 
             <div style={{ marginTop: '20px' }}>
-                <button className="admin-boton secondary-button" onClick={onVolver}>← Volver a Gestión de Usuarios</button>
+                <button className="admin-boton secondary-button" onClick={onVolver}>← Volver</button>
             </div>
         </div>
     );

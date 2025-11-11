@@ -1,8 +1,11 @@
 import {useState} from "react";
+import "./Login.css";
+import Modal from "./componentes/Modal";
 
 function Login({onLoginSuccess }){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [modalConfig, setModalConfig] = useState({ isOpen: false, title: "", message: "", type: "info" });
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -18,8 +21,13 @@ function Login({onLoginSuccess }){
         .then(async (res) => {
         const mensaje = await res.text();
         if (!res.ok) {
-        alert(mensaje);
-        throw new Error(mensaje);
+            setModalConfig({
+                isOpen: true,
+                title: "Error de Inicio de Sesión",
+                message: mensaje,
+                type: "error"
+            });
+            throw new Error(mensaje);
         }
         return JSON.parse(mensaje);
     })
@@ -30,31 +38,43 @@ function Login({onLoginSuccess }){
     };
 
     return(
-        <div>
-            <h2>Iniciar Sesión</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Usuario:</label>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                </div>
+        <div className="login-container">
+            <div className="login-box">
+                <h2>Iniciar Sesión</h2>
+                <form className="login-form" onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label>Usuario:</label>
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                            placeholder="Ingresa tu usuario"
+                        />
+                    </div>
 
-                <div>
-                    <label>Contraseña:</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
+                    <div className="form-group">
+                        <label>Contraseña:</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            placeholder="Ingresa tu contraseña"
+                        />
+                    </div>
 
-                <button type="submit">Ingresar</button>
-            </form>
+                    <button className="login-button" type="submit">Ingresar</button>
+                </form>
+            </div>
+
+            <Modal
+                isOpen={modalConfig.isOpen}
+                onClose={() => setModalConfig({ isOpen: false, title: "", message: "", type: "info" })}
+                title={modalConfig.title}
+                message={modalConfig.message}
+                type={modalConfig.type}
+            />
         </div>
     )
 }

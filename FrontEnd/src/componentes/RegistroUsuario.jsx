@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./RegistroUsuario.css";
+import Modal from "./Modal";
 
 const ROLES = ["Administrador", "Almacenero", "Vendedor"];
 
@@ -9,6 +10,7 @@ const RegistroUsuario = ({ onRegistroExitoso, onVolver }) => {
     const [password, setPassword] = useState("");
     const [rol, setRol] = useState(ROLES[0]);
     const [error, setError] = useState("");
+    const [modalConfig, setModalConfig] = useState({ isOpen: false, title: "", message: "", type: "info" });
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -35,8 +37,16 @@ const RegistroUsuario = ({ onRegistroExitoso, onVolver }) => {
             }
             
             const usuario = JSON.parse(text);
-            alert(`Usuario ${usuario.nombre} registrado exitosamente.`);
-            onRegistroExitoso();
+            setModalConfig({
+                isOpen: true,
+                title: "¡Éxito!",
+                message: `Usuario ${usuario.nombre} registrado exitosamente.`,
+                type: "success",
+                onClose: () => {
+                    setModalConfig({ isOpen: false, title: "", message: "", type: "info" });
+                    onRegistroExitoso();
+                }
+            });
         })
         .catch((err) => {
             console.error(err);
@@ -74,6 +84,14 @@ const RegistroUsuario = ({ onRegistroExitoso, onVolver }) => {
                     <button type="button" onClick={onVolver} className="admin-boton secondary-button">Volver</button>
                 </div>
             </form>
+
+            <Modal
+                isOpen={modalConfig.isOpen}
+                onClose={modalConfig.onClose || (() => setModalConfig({ isOpen: false, title: "", message: "", type: "info" }))}
+                title={modalConfig.title}
+                message={modalConfig.message}
+                type={modalConfig.type}
+            />
         </div>
     );
 };
