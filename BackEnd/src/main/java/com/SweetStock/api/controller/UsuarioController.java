@@ -30,6 +30,74 @@ public class UsuarioController {
         return usuarioRepository.findAll();
     }
 
+    @GetMapping("/usuarios/{id}")
+    public ResponseEntity<?> obtenerUsuarioPorId(@PathVariable int id) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+
+        if (usuarioOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Usuario no encontrado"));
+        }
+
+        Usuario usuario = usuarioOpt.get();
+        return ResponseEntity.ok(Map.of(
+            "id", usuario.getId(),
+            "nombre", usuario.getNombre(),
+            "rol", usuario.getRol()
+        ));
+    }
+
+    @PutMapping("/usuarios/{id}")
+    public ResponseEntity<?> actualizarUsuario(@PathVariable int id, @RequestBody RegistroRequest request) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+
+        if (usuarioOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Usuario no encontrado"));
+        }
+
+        Usuario usuario = usuarioOpt.get();
+
+        // Validar que el nombre no esté vacío
+        if (request.getNombre() == null || request.getNombre().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "El nombre de usuario es obligatorio"));
+        }
+
+        // Validar que el rol sea válido
+        List<String> rolesPermitidos = List.of("Administrador", "Almacenero", "Vendedor");
+        if (request.getRol() == null || !rolesPermitidos.contains(request.getRol())) {
+            return ResponseEntity.badRequest().body(Map.of("error", "El rol especificado no es válido"));
+        }
+
+        // Validar que el nombre no esté duplicado (excepto si es el mismo usuario)
+        Optional<Usuario> usuarioConMismoNombre = usuarioRepository.findByNombre(request.getNombre());
+        if (usuarioConMismoNombre.isPresent() && usuarioConMismoNombre.get().getId() != id) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", "El nombre de usuario ya está en uso"));
+        }
+
+        // Actualizar nombre
+        usuario.setNombre(request.getNombre());
+
+        // Actualizar contraseña solo si se proporcionó una nueva
+        if (request.getPassword() != null && !request.getPassword().trim().isEmpty()) {
+            if (request.getPassword().length() < 6) {
+                return ResponseEntity.badRequest().body(Map.of("error", "La contraseña debe tener al menos 6 caracteres"));
+            }
+            String hashedPassword = passwordEncoder.encode(request.getPassword());
+            usuario.setPassword(hashedPassword);
+        }
+
+        // Actualizar rol
+        usuario.setRol(request.getRol());
+
+        Usuario usuarioActualizado = usuarioRepository.save(usuario);
+
+        return ResponseEntity.ok(Map.of(
+            "mensaje", "Usuario actualizado con éxito",
+            "id", usuarioActualizado.getId(),
+            "nombre", usuarioActualizado.getNombre(),
+            "rol", usuarioActualizado.getRol()
+        ));
+    }
+
     @PostMapping("/usuarios")
     public ResponseEntity<?> registrarUsuario(@RequestBody RegistroRequest request) {
 

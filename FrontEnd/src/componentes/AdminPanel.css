@@ -49,3 +49,97 @@
     margin-bottom: 20px;
     flex-wrap: wrap;
 }
+
+/* Estilos para la tabla de usuarios */
+.tabla-container {
+    overflow-x: auto;
+    margin: 20px auto;
+    max-width: 800px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background: #1a1a1a;
+    border-radius: 8px;
+}
+
+.tabla-usuarios {
+    width: 100%;
+    border-collapse: collapse;
+    background: transparent;
+}
+
+.tabla-usuarios thead {
+    background-color: #007bff;
+    color: white;
+}
+
+.tabla-usuarios th,
+.tabla-usuarios td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #444;
+    color: rgba(255, 255, 255, 0.87);
+}
+
+.tabla-usuarios th {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.tabla-usuarios tbody tr {
+    background-color: #2a2a2a;
+}
+
+.tabla-usuarios tbody tr:hover {
+    background-color: #333;
+}
+
+.tabla-usuarios tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Botones pequeños para acciones */
+.admin-boton-pequeño {
+    padding: 6px 12px;
+    margin: 0 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.3s;
+}
+
+.admin-boton-pequeño.editar {
+    background-color: #007bff;
+    color: white;
+}
+
+.admin-boton-pequeño.editar:hover {
+    background-color: #0056b3;
+}
+
+.admin-boton-pequeño.eliminar {
+    background-color: #dc3545;
+    color: white;
+}
+
+.admin-boton-pequeño.eliminar:hover {
+    background-color: #c82333;
+}
+
+.mensaje-vacio {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 20px;
+    font-style: italic;
+}
+
+.tabla-container .admin-titulo {
+    color: rgba(255, 255, 255, 0.87);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.tabla-container p {
+    color: rgba(255, 255, 255, 0.87);
+}
+
