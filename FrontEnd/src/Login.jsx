@@ -32,7 +32,16 @@ function Login({onLoginSuccess }){
         return JSON.parse(mensaje);
     })
     .then((usuario) => {
-        onLoginSuccess(usuario);
+        setModalConfig({
+            isOpen: true,
+            title: "¡Bienvenido!",
+            message: `Inicio de sesión exitoso. Bienvenido ${usuario.nombre || usuario.usuario}`,
+            type: "success",
+            onClose: () => {
+                setModalConfig({ isOpen: false, title: "", message: "", type: "info" });
+                onLoginSuccess(usuario);
+            }
+        });
     })
     .catch((err) => console.error(err));
     };
@@ -70,7 +79,7 @@ function Login({onLoginSuccess }){
 
             <Modal
                 isOpen={modalConfig.isOpen}
-                onClose={() => setModalConfig({ isOpen: false, title: "", message: "", type: "info" })}
+                onClose={modalConfig.onClose || (() => setModalConfig({ isOpen: false, title: "", message: "", type: "info" }))}
                 title={modalConfig.title}
                 message={modalConfig.message}
                 type={modalConfig.type}

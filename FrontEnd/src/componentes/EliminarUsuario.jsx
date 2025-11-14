@@ -80,7 +80,10 @@ const EliminarUsuario = ({ onVolver }) => {
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>DNI</th>
+                            <th>Usuario</th>
                             <th>Nombre</th>
+                            <th>Apellido</th>
                             <th>Rol</th>
                             <th>Acciones</th>
                         </tr>
@@ -89,7 +92,10 @@ const EliminarUsuario = ({ onVolver }) => {
                         {usuarios.map((u) => (
                             <tr key={u.id}>
                                 <td>{u.id}</td>
+                                <td>{u.dni || 'N/A'}</td>
+                                <td>{u.usuario || 'N/A'}</td>
                                 <td>{u.nombre}</td>
+                                <td>{u.apellido || 'N/A'}</td>
                                 <td>{u.rol}</td>
                                 <td>
                                     <button

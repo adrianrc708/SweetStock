@@ -14,9 +14,18 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(unique = true)
+    private String dni;
+
+    @Column(unique = true)
+    private String usuario;
+
     private String nombre;
+    private String apellido;
     private String password;
     private String rol;
+
     @Column(columnDefinition = "integer default 0")
     private int intentosFallidos = 0;
     @Column(columnDefinition = "boolean default false")
@@ -25,8 +34,11 @@ public class Usuario {
     
     public Usuario(){}
     
-    public Usuario(String nombre, String password, String rol){
+    public Usuario(String dni, String usuario, String nombre, String apellido, String password, String rol){
+        this.dni = dni;
+        this.usuario = usuario;
         this.nombre = nombre;
+        this.apellido = apellido;
         this.password = password;
         this.rol = rol;
     }
@@ -39,6 +51,22 @@ public class Usuario {
         this.id = id;
     }
     
+    public String getDni(){
+        return dni;
+    }
+
+    public void setDni(String dni){
+        this.dni = dni;
+    }
+
+    public String getUsuario(){
+        return usuario;
+    }
+
+    public void setUsuario(String usuario){
+        this.usuario = usuario;
+    }
+
     public String getNombre(){
         return nombre;
     }
@@ -47,6 +75,14 @@ public class Usuario {
         this.nombre = nombre;
     }
     
+    public String getApellido(){
+        return apellido;
+    }
+
+    public void setApellido(String apellido){
+        this.apellido = apellido;
+    }
+
     public String getPassword(){
         return password;
     }

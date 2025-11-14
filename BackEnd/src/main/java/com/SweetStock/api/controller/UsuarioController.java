@@ -55,7 +55,10 @@ public class UsuarioController {
         Usuario usuario = usuarioOpt.get();
         return ResponseEntity.ok(Map.of(
             "id", usuario.getId(),
+            "dni", usuario.getDni(),
+            "usuario", usuario.getUsuario(),
             "nombre", usuario.getNombre(),
+            "apellido", usuario.getApellido(),
             "rol", usuario.getRol()
         ));
     }
@@ -70,9 +73,17 @@ public class UsuarioController {
 
         Usuario usuario = usuarioOpt.get();
 
-        // Validar que el nombre no esté vacío
-        if (request.getNombre() == null || request.getNombre().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "El nombre de usuario es obligatorio"));
+        // Validar campos obligatorios
+        if (request.getDni() == null || request.getDni().trim().isEmpty() ||
+                request.getUsuario() == null || request.getUsuario().trim().isEmpty() ||
+                request.getNombre() == null || request.getNombre().trim().isEmpty() ||
+                request.getApellido() == null || request.getApellido().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "DNI, usuario, nombre y apellido son obligatorios"));
+        }
+
+        // Validar DNI peruano (8 dígitos numéricos)
+        if (!request.getDni().matches("\\d{8}")) {
+            return ResponseEntity.badRequest().body(Map.of("error", "El DNI debe tener exactamente 8 dígitos numéricos."));
         }
 
         // Validar que el rol sea válido
@@ -81,14 +92,24 @@ public class UsuarioController {
             return ResponseEntity.badRequest().body(Map.of("error", "El rol especificado no es válido"));
         }
 
-        // Validar que el nombre no esté duplicado (excepto si es el mismo usuario)
-        Optional<Usuario> usuarioConMismoNombre = usuarioRepository.findByNombre(request.getNombre());
-        if (usuarioConMismoNombre.isPresent() && usuarioConMismoNombre.get().getId() != id) {
+        // Validar unicidad de DNI (excepto si es el mismo usuario)
+        Optional<Usuario> usuarioConMismoDni = usuarioRepository.findByDni(request.getDni());
+        if (usuarioConMismoDni.isPresent() && usuarioConMismoDni.get().getId() != id) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", "El DNI ya está registrado"));
+        }
+
+        // Validar unicidad de usuario (excepto si es el mismo usuario)
+        Optional<Usuario> usuarioConMismoUsuario = usuarioRepository.findByUsuario(request.getUsuario());
+        if (usuarioConMismoUsuario.isPresent() && usuarioConMismoUsuario.get().getId() != id) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", "El nombre de usuario ya está en uso"));
         }
 
-        // Actualizar nombre
+        // Actualizar campos
+        usuario.setDni(request.getDni());
+        usuario.setUsuario(request.getUsuario());
         usuario.setNombre(request.getNombre());
+        usuario.setApellido(request.getApellido());
+        usuario.setRol(request.getRol());
 
         // Actualizar contraseña solo si se proporcionó una nueva
         if (request.getPassword() != null && !request.getPassword().trim().isEmpty()) {
@@ -99,15 +120,15 @@ public class UsuarioController {
             usuario.setPassword(hashedPassword);
         }
 
-        // Actualizar rol
-        usuario.setRol(request.getRol());
-
         Usuario usuarioActualizado = usuarioRepository.save(usuario);
 
         return ResponseEntity.ok(Map.of(
             "mensaje", "Usuario actualizado con éxito",
             "id", usuarioActualizado.getId(),
+            "dni", usuarioActualizado.getDni(),
+            "usuario", usuarioActualizado.getUsuario(),
             "nombre", usuarioActualizado.getNombre(),
+            "apellido", usuarioActualizado.getApellido(),
             "rol", usuarioActualizado.getRol()
         ));
     }
@@ -115,12 +136,22 @@ public class UsuarioController {
     @PostMapping("/usuarios")
     public ResponseEntity<?> registrarUsuario(@RequestBody RegistroRequest request) {
 
-        if (request.getNombre() == null || request.getNombre().trim().isEmpty() ||
+        // Validar campos obligatorios
+        if (request.getDni() == null || request.getDni().trim().isEmpty() ||
+                request.getUsuario() == null || request.getUsuario().trim().isEmpty() ||
+                request.getNombre() == null || request.getNombre().trim().isEmpty() ||
+                request.getApellido() == null || request.getApellido().trim().isEmpty() ||
                 request.getPassword() == null || request.getPassword().trim().isEmpty() ||
                 request.getRol() == null || request.getRol().trim().isEmpty()) {
 
-            return ResponseEntity.badRequest().body(Map.of("error", "Nombre, contraseña y rol son obligatorios."));
+            return ResponseEntity.badRequest().body(Map.of("error", "Todos los campos son obligatorios (DNI, usuario, nombre, apellido, contraseña y rol)."));
         }
+
+        // Validar DNI peruano (8 dígitos numéricos)
+        if (!request.getDni().matches("\\d{8}")) {
+            return ResponseEntity.badRequest().body(Map.of("error", "El DNI debe tener exactamente 8 dígitos numéricos."));
+        }
+
         if (request.getPassword().length() < 6) {
             return ResponseEntity.badRequest().body(Map.of("error", "La contraseña debe tener al menos 6 caracteres."));
         }
@@ -130,24 +161,40 @@ public class UsuarioController {
             return ResponseEntity.badRequest().body(Map.of("error", "El rol especificado no es válido."));
         }
 
-        if (usuarioRepository.findByNombre(request.getNombre()).isPresent()) {
+        // Validar unicidad de usuario y DNI
+        if (usuarioRepository.findByUsuario(request.getUsuario()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", "El nombre de usuario ya está en uso."));
         }
+
+        if (usuarioRepository.findByDni(request.getDni()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", "El DNI ya está registrado."));
+        }
+
         String hashedPassword = passwordEncoder.encode(request.getPassword());
-        Usuario nuevoUsuario = new Usuario(request.getNombre(), hashedPassword, request.getRol());
+        Usuario nuevoUsuario = new Usuario(
+            request.getDni(),
+            request.getUsuario(),
+            request.getNombre(),
+            request.getApellido(),
+            hashedPassword,
+            request.getRol()
+        );
 
         Usuario usuarioGuardado = usuarioRepository.save(nuevoUsuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                 "mensaje", "Usuario registrado con éxito",
                 "id", usuarioGuardado.getId(),
+                "dni", usuarioGuardado.getDni(),
+                "usuario", usuarioGuardado.getUsuario(),
                 "nombre", usuarioGuardado.getNombre(),
+                "apellido", usuarioGuardado.getApellido(),
                 "rol", usuarioGuardado.getRol()
         ));
     }
     
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request){
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByNombre(request.getUsername());
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByUsuario(request.getUsername());
 
         if (usuarioOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario no encontrado");
@@ -189,6 +236,7 @@ public class UsuarioController {
             "mensaje", "Login exitoso",
             "rol", usuario.getRol(),
             "id", usuario.getId(),
+            "usuario", usuario.getUsuario(),
             "nombre", usuario.getNombre()
         ));
     }

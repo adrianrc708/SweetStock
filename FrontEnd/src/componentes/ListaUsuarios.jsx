@@ -55,7 +55,10 @@ const ListaUsuarios = ({ onEditar, onVolver, usuarioActual }) => {
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>DNI</th>
+                            <th>Usuario</th>
                             <th>Nombre</th>
+                            <th>Apellido</th>
                             <th>Rol</th>
                             <th>Acciones</th>
                         </tr>
@@ -64,7 +67,10 @@ const ListaUsuarios = ({ onEditar, onVolver, usuarioActual }) => {
                         {usuarios.map(usuario => (
                             <tr key={usuario.id}>
                                 <td>{usuario.id}</td>
+                                <td>{usuario.dni || 'N/A'}</td>
+                                <td>{usuario.usuario || 'N/A'}</td>
                                 <td>{usuario.nombre}</td>
+                                <td>{usuario.apellido || 'N/A'}</td>
                                 <td>{usuario.rol}</td>
                                 <td>
                                     <button

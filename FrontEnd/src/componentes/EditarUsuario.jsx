@@ -5,12 +5,14 @@ import Modal from "./Modal";
 const ROLES = ["Administrador", "Almacenero", "Vendedor"];
 
 const EditarUsuario = ({ usuarioId, onEditarExitoso, onVolver, usuarioActual }) => {
+    const [dni, setDni] = useState("");
+    const [usuario, setUsuario] = useState("");
     const [nombre, setNombre] = useState("");
+    const [apellido, setApellido] = useState("");
     const [password, setPassword] = useState("");
     const [rol, setRol] = useState(ROLES[0]);
     const [error, setError] = useState("");
     const [cargando, setCargando] = useState(true);
-    const [nombreOriginal, setNombreOriginal] = useState("");
     const [modalConfig, setModalConfig] = useState({ isOpen: false, title: "", message: "", type: "info" });
 
     useEffect(() => {
@@ -28,8 +30,10 @@ const EditarUsuario = ({ usuarioId, onEditarExitoso, onVolver, usuarioActual }) 
             })
             .then(data => {
                 if (isMounted) {
-                    setNombre(data.nombre);
-                    setNombreOriginal(data.nombre);
+                    setDni(data.dni || "");
+                    setUsuario(data.usuario || "");
+                    setNombre(data.nombre || "");
+                    setApellido(data.apellido || "");
                     setRol(data.rol);
                     setCargando(false);
                 }
@@ -47,13 +51,27 @@ const EditarUsuario = ({ usuarioId, onEditarExitoso, onVolver, usuarioActual }) 
         };
     }, [usuarioId]);
 
+    const handleDniChange = (e) => {
+        const value = e.target.value.replace(/\D/g, ''); // Solo números
+        if (value.length <= 8) {
+            setDni(value);
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         setError("");
 
-        // Validar que el nombre no esté vacío
-        if (!nombre || nombre.trim() === "") {
-            setError("El nombre de usuario es obligatorio");
+        // Validar que los campos obligatorios no estén vacíos
+        if (!dni || dni.trim() === "" || !usuario || usuario.trim() === "" ||
+            !nombre || nombre.trim() === "" || !apellido || apellido.trim() === "") {
+            setError("DNI, usuario, nombre y apellido son obligatorios");
+            return;
+        }
+
+        // Validar DNI de 8 dígitos
+        if (dni.length !== 8) {
+            setError("El DNI debe tener exactamente 8 dígitos");
             return;
         }
 
@@ -71,7 +89,10 @@ const EditarUsuario = ({ usuarioId, onEditarExitoso, onVolver, usuarioActual }) 
         }
 
         const data = {
+            dni,
+            usuario,
             nombre,
+            apellido,
             rol,
             password: password || undefined // Solo enviar si hay valor
         };
@@ -122,16 +143,60 @@ const EditarUsuario = ({ usuarioId, onEditarExitoso, onVolver, usuarioActual }) 
 
             <form onSubmit={handleSubmit} className="registro-form">
                 <div className="form-group">
-                    <label htmlFor="nombreUsuario">Nombre de Usuario:</label>
+                    <label htmlFor="usuario">Usuario:</label>
                     <input
-                        id="nombreUsuario"
+                        id="usuario"
+                        type="text"
+                        value={usuario}
+                        onChange={(e) => setUsuario(e.target.value)}
+                        required
+                        className="form-input"
+                        placeholder="Ej: jperez (para login)"
+                    />
+                    <small className="form-hint">Debe ser único - se usa para el login</small>
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="nombre">Nombre:</label>
+                    <input
+                        id="nombre"
                         type="text"
                         value={nombre}
                         onChange={(e) => setNombre(e.target.value)}
                         required
                         className="form-input"
+                        placeholder="Ej: Juan"
                     />
-                    <small className="form-hint">Se puede cambiar, pero debe ser único</small>
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="apellido">Apellido:</label>
+                    <input
+                        id="apellido"
+                        type="text"
+                        value={apellido}
+                        onChange={(e) => setApellido(e.target.value)}
+                        required
+                        className="form-input"
+                        placeholder="Ej: Pérez"
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="dni">DNI:</label>
+                    <input
+                        id="dni"
+                        type="text"
+                        value={dni}
+                        onChange={handleDniChange}
+                        required
+                        className="form-input"
+                        placeholder="8 dígitos"
+                        maxLength={8}
+                        pattern="\d{8}"
+                        title="Ingrese 8 dígitos numéricos"
+                    />
+                    <small className="form-hint">Debe ser único - 8 dígitos exactos</small>
                 </div>
 
                 <div className="form-group">
@@ -148,17 +213,22 @@ const EditarUsuario = ({ usuarioId, onEditarExitoso, onVolver, usuarioActual }) 
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="rolUsuario">Rol:</label>
-                    <select
-                        id="rolUsuario"
-                        value={rol}
-                        onChange={(e) => setRol(e.target.value)}
-                        className="form-select"
-                    >
+                    <label>Rol:</label>
+                    <div className="radio-group">
                         {ROLES.map(r => (
-                            <option key={r} value={r}>{r}</option>
+                            <label key={r} className="radio-label">
+                                <input
+                                    type="radio"
+                                    name="rol"
+                                    value={r}
+                                    checked={rol === r}
+                                    onChange={(e) => setRol(e.target.value)}
+                                    required
+                                />
+                                <span>{r}</span>
+                            </label>
                         ))}
-                    </select>
+                    </div>
                 </div>
 
                 <div className="form-actions">
