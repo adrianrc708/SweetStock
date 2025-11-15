@@ -1,0 +1,243 @@
+/* Estilos para el Panel de Vendedor */
+.vendedor-container {
+    padding: 28px 60px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    min-height: calc(100vh - 96px);
+}
+
+.vendedor-header {
+    margin-bottom: 36px;
+}
+
+.vendedor-titulo {
+    font-size: 38px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #1a1a1a;
+}
+
+.vendedor-subtitulo {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 0;
+}
+
+.accesos-rapidos {
+    margin-top: 35px;
+}
+
+.vendedor-card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 30px;
+    max-width: 450px;
+}
+
+.vendedor-card {
+    background: white;
+    border: 1px solid #e8e8e8;
+    border-radius: 16px;
+    padding: 40px 35px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    max-width: 380px;
+}
+
+.vendedor-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-3px);
+}
+
+.card-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.stock-icon {
+    background-color: #ffe5f0;
+    color: #ff4d8a;
+}
+
+.vendedor-card h3 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    color: #1a1a1a;
+}
+
+.vendedor-card p {
+    font-size: 18px;
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 24px;
+    flex-grow: 1;
+}
+
+.vendedor-boton {
+    padding: 14px 30px;
+    border: none;
+    border-radius: 10px;
+    background-color: #ff6b9d;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+}
+
+.vendedor-boton:hover {
+    background-color: #ff4d8a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 107, 157, 0.35);
+}
+
+/* Layout de Gestión de Stock con sidebar */
+.gestion-layout {
+    display: flex;
+    gap: 0;
+    min-height: calc(100vh - 96px);
+    background-color: #f5f5f5;
+}
+
+.gestion-sidebar {
+    width: 280px;
+    background: white;
+    padding: 30px 0;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.gestion-titulo {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 30px 0;
+    padding: 0 30px;
+}
+
+.gestion-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 15px;
+}
+
+.gestion-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: white;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 10px;
+    color: #555;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: left;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.gestion-menu-item svg {
+    flex-shrink: 0;
+    opacity: 0.85;
+    transition: opacity 0.25s ease;
+}
+
+.gestion-menu-item:hover {
+    background: #f8f9fa;
+    border-color: #c0c0c0;
+    color: #333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.gestion-menu-item:hover svg {
+    opacity: 1;
+}
+
+.gestion-menu-item:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+
+.gestion-menu-item.menu-volver {
+    margin-top: auto;
+    background: #6c757d;
+    border: 1.5px solid #5a6268;
+    color: white;
+    box-shadow: 0 2px 4px rgba(108, 117, 125, 0.2);
+}
+
+.gestion-menu-item.menu-volver:hover {
+    background: #5a6268;
+    border-color: #495057;
+    color: white;
+    box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3);
+}
+
+.gestion-menu-item.menu-volver svg {
+    opacity: 1;
+}
+
+.gestion-contenido {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.contenido-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    text-align: center;
+}
+
+.placeholder-emoji {
+    font-size: 90px;
+    margin-bottom: 20px;
+    filter: grayscale(100%) brightness(1.2) sepia(100%) hue-rotate(290deg) saturate(150%);
+    background: #fce4ec;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(193, 122, 201, 0.15);
+}
+
+.contenido-placeholder h3 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #555;
+    margin: 0 0 12px 0;
+}
+
+.contenido-placeholder p {
+    font-size: 15px;
+    color: #888;
+    margin: 0 0 6px 0;
+    line-height: 1.5;
+}
+
+.placeholder-subtitle {
+    font-size: 13px;
+    color: #aaa;
+    font-style: italic;
+}
+
