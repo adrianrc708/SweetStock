@@ -134,8 +134,8 @@
 /* Estilos para la tabla de usuarios */
 .tabla-container {
     overflow-x: auto;
-    margin: 20px auto;
-    max-width: 1300px;
+    margin: 0 auto;
+    max-width: 100%;
     padding: 30px;
     background: white;
     border-radius: 16px;
@@ -380,5 +380,157 @@
     font-size: 14px;
     color: #666;
     font-weight: 500;
+}
+
+/* Layout de Gestión de Usuarios con sidebar */
+.gestion-layout {
+    display: flex;
+    gap: 0;
+    min-height: calc(100vh - 96px);
+    background-color: #f5f5f5;
+}
+
+.gestion-sidebar {
+    width: 280px;
+    background: white;
+    padding: 30px 0;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.gestion-titulo {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 30px 0;
+    padding: 0 30px;
+}
+
+.gestion-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 15px;
+}
+
+.gestion-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: white;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 10px;
+    color: #555;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: left;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.gestion-menu-item svg {
+    flex-shrink: 0;
+    opacity: 0.85;
+    transition: opacity 0.25s ease;
+}
+
+.gestion-menu-item:hover {
+    background: #f8f9fa;
+    border-color: #c0c0c0;
+    color: #333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.gestion-menu-item:hover svg {
+    opacity: 1;
+}
+
+.gestion-menu-item:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.gestion-menu-item.activo {
+    background: linear-gradient(135deg, #ffe5f0 0%, #fff0f6 100%);
+    border-color: #ff6b9d;
+    color: #ff4d8a;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(255, 107, 157, 0.2);
+}
+
+.gestion-menu-item.activo svg {
+    opacity: 1;
+}
+
+.gestion-menu-item.menu-volver {
+    margin-top: auto;
+    background: #6c757d;
+    border: 1.5px solid #5a6268;
+    color: white;
+    box-shadow: 0 2px 4px rgba(108, 117, 125, 0.2);
+}
+
+.gestion-menu-item.menu-volver:hover {
+    background: #5a6268;
+    border-color: #495057;
+    color: white;
+    box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3);
+}
+
+.gestion-menu-item.menu-volver svg {
+    opacity: 1;
+}
+
+.gestion-contenido {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.contenido-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    text-align: center;
+}
+
+.placeholder-emoji {
+    font-size: 90px;
+    margin-bottom: 20px;
+    filter: grayscale(100%) brightness(1.2) sepia(100%) hue-rotate(290deg) saturate(150%);
+    background: #fce4ec;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(193, 122, 201, 0.15);
+}
+
+.contenido-placeholder h3 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #555;
+    margin: 0 0 12px 0;
+}
+
+.contenido-placeholder p {
+    font-size: 15px;
+    color: #888;
+    margin: 0 0 6px 0;
+    line-height: 1.5;
+}
+
+.placeholder-subtitle {
+    font-size: 13px;
+    color: #aaa;
+    font-style: italic;
 }
 

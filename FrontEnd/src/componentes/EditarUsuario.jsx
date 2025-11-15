@@ -237,8 +237,7 @@ const EditarUsuario = ({ usuarioId, onEditarExitoso, onVolver, usuarioActual }) 
                 </div>
 
                 <div className="form-actions">
-                    <button type="button" onClick={onVolver} className="admin-boton secondary-button">Cancelar</button>
-                    <button type="submit" className="admin-boton">Guardar Cambios</button>
+                    <button type="submit" className="admin-boton" style={{ gridColumn: '1 / -1' }}>Guardar Cambios</button>
                 </div>
             </form>
 

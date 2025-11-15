@@ -142,8 +142,7 @@ const RegistroUsuario = ({ onRegistroExitoso, onVolver }) => {
                 </div>
                 
                 <div className="form-actions">
-                    <button type="button" onClick={onVolver} className="admin-boton secondary-button">Volver</button>
-                    <button type="submit" className="admin-boton">Registrar</button>
+                    <button type="submit" className="admin-boton" style={{ gridColumn: '1 / -1' }}>Registrar</button>
                 </div>
             </form>
 

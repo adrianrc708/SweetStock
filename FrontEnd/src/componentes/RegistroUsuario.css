@@ -1,15 +1,15 @@
 .registro-container {
-    padding: 40px 50px;
+    padding: 30px 50px 40px;
     max-width: 700px;
-    margin: 30px auto;
+    margin: 0 auto;
     border: 1px solid #e8e8e8;
     background: white;
     border-radius: 16px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
 .registro-titulo {
-    margin-bottom: 8px;
+    margin: 0 0 8px 0;
     font-size: 28px;
     font-weight: 700;
     color: #1a1a1a;

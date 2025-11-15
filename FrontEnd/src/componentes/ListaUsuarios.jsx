@@ -181,10 +181,6 @@ const ListaUsuarios = ({ onEditar, onVolver, usuarioActual }) => {
             {usuariosFiltrados.length === 0 && !error && (
                 <p className="mensaje-vacio">No hay usuarios que coincidan con la búsqueda</p>
             )}
-
-            <div style={{ marginTop: '20px' }}>
-                <button className="admin-boton secondary-button" onClick={onVolver}>← Volver</button>
-            </div>
         </div>
     );
 };
