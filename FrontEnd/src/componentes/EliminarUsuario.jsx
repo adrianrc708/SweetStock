@@ -8,6 +8,10 @@ const EliminarUsuario = ({ onVolver }) => {
     const [mensaje, setMensaje] = useState("");
     const [modalConfig, setModalConfig] = useState({ isOpen: false, title: "", message: "", type: "info", showCancel: false });
     const [usuarioAEliminar, setUsuarioAEliminar] = useState(null);
+    const [busqueda, setBusqueda] = useState("");
+    const [rolFiltro, setRolFiltro] = useState("Todos");
+    const [paginaActual, setPaginaActual] = useState(1);
+    const usuariosPorPagina = 10;
 
     // Cargar usuarios al iniciar
     useEffect(() => {
@@ -68,14 +72,70 @@ const EliminarUsuario = ({ onVolver }) => {
         }
     };
 
+    const normalizar = (s = "") => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const filtro = normalizar(busqueda.trim());
+
+    const usuariosFiltrados = usuarios.filter(u => {
+        const cumpleBusqueda = !filtro || normalizar(u?.nombre || "").includes(filtro) ||
+                               normalizar(u?.apellido || "").includes(filtro) ||
+                               normalizar(u?.usuario || "").includes(filtro);
+        const cumpleRol = rolFiltro === "Todos" || u.rol === rolFiltro;
+        return cumpleBusqueda && cumpleRol;
+    });
+
+    // Calcular paginación
+    const totalPaginas = Math.ceil(usuariosFiltrados.length / usuariosPorPagina);
+    const indiceInicio = (paginaActual - 1) * usuariosPorPagina;
+    const indiceFin = indiceInicio + usuariosPorPagina;
+    const usuariosPaginados = usuariosFiltrados.slice(indiceInicio, indiceFin);
+
+
+    // Resetear a página 1 cuando cambian los filtros
+    useEffect(() => {
+        setPaginaActual(1);
+    }, [busqueda, rolFiltro]);
+
     return (
         <div className="tabla-container">
-            <h2 className="admin-titulo">Selecciona un Usuario para Eliminar</h2>
+            <div className="tabla-header">
+                <h2 className="admin-titulo">Selecciona un Usuario para Eliminar</h2>
+                <div className="tabla-filtros">
+                    <div className="filtro-rol">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg>
+                        <select
+                            className="select-rol"
+                            value={rolFiltro}
+                            onChange={(e) => setRolFiltro(e.target.value)}
+                        >
+                            <option value="Todos">Todos los roles</option>
+                            <option value="Administrador">Administrador</option>
+                            <option value="Almacenero">Almacenero</option>
+                            <option value="Vendedor">Vendedor</option>
+                        </select>
+                    </div>
+                    <div className="filtro-busqueda">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input
+                            type="text"
+                            className="input-busqueda"
+                            placeholder="Buscar usuario..."
+                            value={busqueda}
+                            onChange={(e) => setBusqueda(e.target.value)}
+                        />
+                    </div>
+                </div>
+            </div>
 
             {error && <p className="error-message">{error}</p>}
             {mensaje && <p className="success-message">{mensaje}</p>}
 
-            {usuarios.length > 0 && (
+            {usuariosFiltrados.length > 0 && (
+                <>
                 <table className="tabla-usuarios">
                     <thead>
                         <tr>
@@ -89,7 +149,7 @@ const EliminarUsuario = ({ onVolver }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {usuarios.map((u) => (
+                        {usuariosPaginados.map((u) => (
                             <tr key={u.id}>
                                 <td>{u.id}</td>
                                 <td>{u.dni || 'N/A'}</td>
@@ -116,15 +176,37 @@ const EliminarUsuario = ({ onVolver }) => {
                         ))}
                     </tbody>
                 </table>
+
+                {totalPaginas > 1 && (
+                    <div className="paginacion">
+                        <button
+                            className="paginacion-boton"
+                            onClick={() => setPaginaActual(prev => Math.max(prev - 1, 1))}
+                            disabled={paginaActual === 1}
+                        >
+                            ← Anterior
+                        </button>
+
+                        <div className="paginacion-info">
+                            Página {paginaActual} de {totalPaginas} ({usuariosFiltrados.length} usuarios)
+                        </div>
+
+                        <button
+                            className="paginacion-boton"
+                            onClick={() => setPaginaActual(prev => Math.min(prev + 1, totalPaginas))}
+                            disabled={paginaActual === totalPaginas}
+                        >
+                            Siguiente →
+                        </button>
+                    </div>
+                )}
+                </>
             )}
 
-            {usuarios.length === 0 && !error && (
-                <p className="mensaje-vacio">No hay usuarios registrados</p>
+            {usuariosFiltrados.length === 0 && !error && (
+                <p className="mensaje-vacio">No hay usuarios que coincidan con la búsqueda</p>
             )}
 
-            <div style={{ marginTop: '20px' }}>
-                <button className="admin-boton secondary-button" onClick={onVolver}>← Volver</button>
-            </div>
 
             <Modal
                 isOpen={modalConfig.isOpen}

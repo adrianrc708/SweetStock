@@ -77,47 +77,52 @@ const RegistroUsuario = ({ onRegistroExitoso, onVolver }) => {
     return (
         <div className="registro-container">
             <h2 className="registro-titulo">Registrar Nuevo Usuario</h2>
+            <p className="registro-subtitulo">Complete los datos para crear una nueva cuenta de usuario.</p>
             {error && <p className="error-message">{error}</p>}
             
             <form onSubmit={handleSubmit} className="registro-form">
-                <div className="form-group">
-                    <label htmlFor="usuario">Usuario:</label>
-                    <input id="usuario" type="text" value={usuario} onChange={(e) => setUsuario(e.target.value)} required className="form-input" placeholder="Ej: jperez (para login)" />
+                <div className="form-row">
+                    <div className="form-group">
+                        <label htmlFor="usuario">Usuario:</label>
+                        <input id="usuario" type="text" value={usuario} onChange={(e) => setUsuario(e.target.value)} required className="form-input" placeholder="ej., j.perez" />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="dni">DNI:</label>
+                        <input
+                            id="dni"
+                            type="text"
+                            value={dni}
+                            onChange={handleDniChange}
+                            required
+                            className="form-input"
+                            placeholder="8 dígitos"
+                            maxLength={8}
+                            pattern="\d{8}"
+                            title="Ingrese 8 dígitos numéricos"
+                        />
+                        <small className="form-hint">Debe tener exactamente 8 dígitos.</small>
+                    </div>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="nombre">Nombre:</label>
-                    <input id="nombre" type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} required className="form-input" placeholder="Ej: Juan" />
+                <div className="form-row">
+                    <div className="form-group">
+                        <label htmlFor="nombre">Nombre:</label>
+                        <input id="nombre" type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} required className="form-input" placeholder="ej., Juan" />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="apellido">Apellido:</label>
+                        <input id="apellido" type="text" value={apellido} onChange={(e) => setApellido(e.target.value)} required className="form-input" placeholder="ej., Pérez" />
+                    </div>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="apellido">Apellido:</label>
-                    <input id="apellido" type="text" value={apellido} onChange={(e) => setApellido(e.target.value)} required className="form-input" placeholder="Ej: Pérez" />
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="dni">DNI:</label>
-                    <input
-                        id="dni"
-                        type="text"
-                        value={dni}
-                        onChange={handleDniChange}
-                        required
-                        className="form-input"
-                        placeholder="8 dígitos"
-                        maxLength={8}
-                        pattern="\d{8}"
-                        title="Ingrese 8 dígitos numéricos"
-                    />
-                    <small className="form-hint">Debe tener exactamente 8 dígitos</small>
-                </div>
-
-                <div className="form-group">
+                <div className="form-group form-group-full">
                     <label htmlFor="password">Contraseña:</label>
                     <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="form-input" placeholder="Mínimo 6 caracteres" />
                 </div>
                 
-                <div className="form-group">
+                <div className="form-group form-group-full">
                     <label>Rol:</label>
                     <div className="radio-group">
                         {ROLES.map(r => (
@@ -137,8 +142,7 @@ const RegistroUsuario = ({ onRegistroExitoso, onVolver }) => {
                 </div>
                 
                 <div className="form-actions">
-                    <button type="submit" className="admin-boton">Registrar</button>
-                    <button type="button" onClick={onVolver} className="admin-boton secondary-button">Volver</button>
+                    <button type="submit" className="admin-boton" style={{ gridColumn: '1 / -1' }}>Registrar</button>
                 </div>
             </form>
 
