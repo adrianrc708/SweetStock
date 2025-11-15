@@ -139,67 +139,72 @@ const EditarUsuario = ({ usuarioId, onEditarExitoso, onVolver, usuarioActual }) 
     return (
         <div className="registro-container">
             <h2 className="registro-titulo">Editar Usuario</h2>
+            <p className="registro-subtitulo">Actualiza la información del usuario.</p>
             {error && <p className="error-message">{error}</p>}
 
             <form onSubmit={handleSubmit} className="registro-form">
-                <div className="form-group">
-                    <label htmlFor="usuario">Usuario:</label>
-                    <input
-                        id="usuario"
-                        type="text"
-                        value={usuario}
-                        onChange={(e) => setUsuario(e.target.value)}
-                        required
-                        className="form-input"
-                        placeholder="Ej: jperez (para login)"
-                    />
-                    <small className="form-hint">Debe ser único - se usa para el login</small>
+                <div className="form-row">
+                    <div className="form-group">
+                        <label htmlFor="usuario">Usuario:</label>
+                        <input
+                            id="usuario"
+                            type="text"
+                            value={usuario}
+                            onChange={(e) => setUsuario(e.target.value)}
+                            required
+                            className="form-input"
+                            placeholder="ej., j.perez"
+                        />
+                        <small className="form-hint">Debe ser único - se usa para el login</small>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="dni">DNI:</label>
+                        <input
+                            id="dni"
+                            type="text"
+                            value={dni}
+                            onChange={handleDniChange}
+                            required
+                            className="form-input"
+                            placeholder="8 dígitos"
+                            maxLength={8}
+                            pattern="\d{8}"
+                            title="Ingrese 8 dígitos numéricos"
+                        />
+                        <small className="form-hint">Debe ser único - 8 dígitos exactos</small>
+                    </div>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="nombre">Nombre:</label>
-                    <input
-                        id="nombre"
-                        type="text"
-                        value={nombre}
-                        onChange={(e) => setNombre(e.target.value)}
-                        required
-                        className="form-input"
-                        placeholder="Ej: Juan"
-                    />
+                <div className="form-row">
+                    <div className="form-group">
+                        <label htmlFor="nombre">Nombre:</label>
+                        <input
+                            id="nombre"
+                            type="text"
+                            value={nombre}
+                            onChange={(e) => setNombre(e.target.value)}
+                            required
+                            className="form-input"
+                            placeholder="ej., Juan"
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="apellido">Apellido:</label>
+                        <input
+                            id="apellido"
+                            type="text"
+                            value={apellido}
+                            onChange={(e) => setApellido(e.target.value)}
+                            required
+                            className="form-input"
+                            placeholder="ej., Pérez"
+                        />
+                    </div>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="apellido">Apellido:</label>
-                    <input
-                        id="apellido"
-                        type="text"
-                        value={apellido}
-                        onChange={(e) => setApellido(e.target.value)}
-                        required
-                        className="form-input"
-                        placeholder="Ej: Pérez"
-                    />
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="dni">DNI:</label>
-                    <input
-                        id="dni"
-                        type="text"
-                        value={dni}
-                        onChange={handleDniChange}
-                        required
-                        className="form-input"
-                        placeholder="8 dígitos"
-                        maxLength={8}
-                        pattern="\d{8}"
-                        title="Ingrese 8 dígitos numéricos"
-                    />
-                    <small className="form-hint">Debe ser único - 8 dígitos exactos</small>
-                </div>
-
-                <div className="form-group">
+                <div className="form-group form-group-full">
                     <label htmlFor="password">Nueva Contraseña:</label>
                     <input
                         id="password"
@@ -212,7 +217,7 @@ const EditarUsuario = ({ usuarioId, onEditarExitoso, onVolver, usuarioActual }) 
                     <small className="form-hint">Mínimo 6 caracteres (opcional)</small>
                 </div>
 
-                <div className="form-group">
+                <div className="form-group form-group-full">
                     <label>Rol:</label>
                     <div className="radio-group">
                         {ROLES.map(r => (
@@ -232,8 +237,8 @@ const EditarUsuario = ({ usuarioId, onEditarExitoso, onVolver, usuarioActual }) 
                 </div>
 
                 <div className="form-actions">
-                    <button type="submit" className="admin-boton">Guardar Cambios</button>
                     <button type="button" onClick={onVolver} className="admin-boton secondary-button">Cancelar</button>
+                    <button type="submit" className="admin-boton">Guardar Cambios</button>
                 </div>
             </form>
 
