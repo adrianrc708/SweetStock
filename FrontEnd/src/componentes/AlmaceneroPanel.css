@@ -1,23 +1,23 @@
 /* Estilos para el Panel de Almacenero */
-.vendedor-container {
+.almacenero-container {
     padding: 28px 60px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f5f5f5;
     min-height: calc(100vh - 96px);
 }
 
-.vendedor-header {
+.almacenero-header {
     margin-bottom: 36px;
 }
 
-.vendedor-titulo {
+.almacenero-titulo {
     font-size: 38px;
     font-weight: 700;
     margin-bottom: 12px;
     color: #1a1a1a;
 }
 
-.vendedor-subtitulo {
+.almacenero-subtitulo {
     font-size: 18px;
     color: #666;
     margin-bottom: 0;
@@ -27,14 +27,14 @@
     margin-top: 35px;
 }
 
-.vendedor-card-container {
+.almacenero-card-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
     gap: 30px;
     max-width: 850px;
 }
 
-.vendedor-card {
+.almacenero-card {
     background: white;
     border: 1px solid #e8e8e8;
     border-radius: 16px;
@@ -46,7 +46,7 @@
     max-width: 380px;
 }
 
-.vendedor-card:hover {
+.almacenero-card:hover {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
     transform: translateY(-3px);
 }
@@ -71,14 +71,14 @@
     color: #ff4d8a;
 }
 
-.vendedor-card h3 {
+.almacenero-card h3 {
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 14px;
     color: #1a1a1a;
 }
 
-.vendedor-card p {
+.almacenero-card p {
     font-size: 18px;
     color: #666;
     line-height: 1.7;
@@ -86,7 +86,7 @@
     flex-grow: 1;
 }
 
-.vendedor-boton {
+.almacenero-boton {
     padding: 14px 30px;
     border: none;
     border-radius: 10px;
@@ -99,13 +99,12 @@
     align-self: flex-start;
 }
 
-.vendedor-boton:hover {
+.almacenero-boton:hover {
     background-color: #ff4d8a;
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(255, 107, 157, 0.35);
 }
 
-/* Layout de Gestión de Stock con sidebar */
 .gestion-layout {
     display: flex;
     gap: 0;
@@ -244,4 +243,3 @@
     color: #aaa;
     font-style: italic;
 }
-
