@@ -1,12 +1,19 @@
 import React from "react";
 import "./Modal.css";
 
-const Modal = ({ isOpen, onClose, title, message, type = "info", onConfirm, showCancel = false }) => {
+const Modal = ({ isOpen, onClose, title, message, type = "info", onConfirm, onCancel, showCancel = false }) => {
     if (!isOpen) return null;
 
     const handleConfirm = () => {
         if (onConfirm) {
             onConfirm();
+        }
+        onClose();
+    };
+
+    const handleCancel = () => {
+        if (onCancel) {
+            onCancel();
         }
         onClose();
     };
@@ -48,7 +55,7 @@ const Modal = ({ isOpen, onClose, title, message, type = "info", onConfirm, show
     };
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-overlay" onClick={showCancel ? undefined : onClose}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <div className="modal-icon">
                     {getIcon()}
@@ -57,7 +64,7 @@ const Modal = ({ isOpen, onClose, title, message, type = "info", onConfirm, show
                 <p className="modal-message">{message}</p>
                 <div className="modal-buttons">
                     {showCancel && (
-                        <button className="modal-button modal-button-cancel" onClick={onClose}>
+                        <button className="modal-button modal-button-cancel" onClick={handleCancel}>
                             Cancelar
                         </button>
                     )}

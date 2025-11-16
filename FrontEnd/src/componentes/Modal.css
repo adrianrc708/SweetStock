@@ -61,6 +61,7 @@
     color: #666;
     line-height: 1.6;
     margin-bottom: 30px;
+    white-space: pre-line;
 }
 
 .modal-buttons {
@@ -110,4 +111,3 @@
     background-color: #c82333;
     box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
 }
-
