@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./AlmaceneroPanel.css";
 import TablaInventario from "./TablaInventario";
+import ActualizarStock from "./ActualizarStock";
 
 const VistaGestionProductos = ({ onVolver, usuario }) => {
     const [vista, setVista] = useState('menu');
@@ -10,7 +11,7 @@ const VistaGestionProductos = ({ onVolver, usuario }) => {
             case 'ver':
                 return <TablaInventario />;
             case 'actualizar':
-                return <div className="contenido-placeholder"><h3>Actualizar Stock</h3><p>Vista no implementada.</p></div>;
+                return <ActualizarStock usuario={usuario} />;
             case 'historial':
                 return <div className="contenido-placeholder"><h3>Historial de Movimientos</h3><p>Vista no implementada.</p></div>;
             default: // 'menu'
