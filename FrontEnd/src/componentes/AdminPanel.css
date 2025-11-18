@@ -144,11 +144,12 @@
 
 .tabla-header {
     display: flex;
+    flex-direction: row; /* Asegura que vayan uno al lado del otro */
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    gap: 20px;
-    flex-wrap: wrap;
+    gap: 15px;
+    flex-wrap: wrap; /* Para que no se rompa en pantallas pequeñas */
 }
 
 .tabla-header .admin-titulo {
@@ -205,7 +206,7 @@
     font-size: 14px;
     color: #333;
     outline: none;
-    min-width: 200px;
+    min-width: 180px;
 }
 
 .input-busqueda::placeholder {

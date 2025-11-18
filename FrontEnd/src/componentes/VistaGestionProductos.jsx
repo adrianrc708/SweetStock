@@ -2,14 +2,31 @@ import React, { useState } from "react";
 import "./AlmaceneroPanel.css";
 import TablaInventario from "./TablaInventario";
 import ActualizarStock from "./ActualizarStock";
+import EditarProducto from './EditarProducto';
+
 
 const VistaGestionProductos = ({ onVolver, usuario }) => {
+    const [productoId, setProductoId] = useState(null);
     const [vista, setVista] = useState('menu');
 
     const renderContenido = () => {
         switch (vista) {
             case 'ver':
-                return <TablaInventario />;
+                return (
+                    <TablaInventario 
+                        onEditar={(id) => {
+                            setProductoId(id);  // Se modificó el case 'ver', antes:  return <TablaInventario />;
+                            setVista('editar');
+                        }} 
+                    />
+                );
+            case 'editar':
+                return (
+                    <EditarProducto 
+                        productoId={productoId}
+                        onVolver={() => setVista('ver')}
+                    />
+                );
             case 'actualizar':
                 return <ActualizarStock usuario={usuario} />;
             case 'historial':

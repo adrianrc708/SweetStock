@@ -1,0 +1,28 @@
+/* Contenedor general del formulario */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Separación entre cada campo */
+}
+
+/* Separación entre label y su input */
+form label {
+    margin-bottom: 4px;
+}
+
+/* Separación hacia arriba de los botones */
+form button {
+    margin-top: 10px;
+}
+
+/* Separación entre los dos botones */
+form button + button {
+    margin-left: 10px;
+}
+
+/* Botones alineados horizontalmente*/
+.botones {
+    display: flex;
+    gap: 12px;
+}
+
