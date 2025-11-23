@@ -73,6 +73,7 @@ const VistaGestionProductos = ({ onVolver, usuario }) => {
                         Actualizar stock
                     </button>
 
+                    {/*
                     <button
                         className={`gestion-menu-item menu-historial ${vista === 'historial' ? 'activo' : ''}`}
                         onClick={() => setVista('historial')}
@@ -83,6 +84,7 @@ const VistaGestionProductos = ({ onVolver, usuario }) => {
                         </svg>
                         Historial de movimientos
                     </button>
+                    */}
 
                     <button className="gestion-menu-item menu-volver" onClick={onVolver}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

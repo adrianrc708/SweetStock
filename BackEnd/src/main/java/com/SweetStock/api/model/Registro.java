@@ -21,7 +21,7 @@ public class Registro {
     private Usuario usuarioRegistro;
 
     @Column(nullable = false, length = 15)
-    private String estado; // ingreso | despacho
+    private String estado; // ingreso | salida
 
     @Column(name = "cantidad_caja")
     private Integer cantidadCaja; // movimiento cajas
