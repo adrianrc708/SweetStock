@@ -2,14 +2,31 @@ import React, { useState } from "react";
 import "./AlmaceneroPanel.css";
 import TablaInventario from "./TablaInventario";
 import ActualizarStock from "./ActualizarStock";
+import EditarProducto from './EditarProducto';
+
 
 const VistaGestionProductos = ({ onVolver, usuario }) => {
+    const [productoId, setProductoId] = useState(null);
     const [vista, setVista] = useState('menu');
 
     const renderContenido = () => {
         switch (vista) {
             case 'ver':
-                return <TablaInventario />;
+                return (
+                    <TablaInventario 
+                        onEditar={(id) => {
+                            setProductoId(id);  // Se modificó el case 'ver', antes:  return <TablaInventario />;
+                            setVista('editar');
+                        }} 
+                    />
+                );
+            case 'editar':
+                return (
+                    <EditarProducto 
+                        productoId={productoId}
+                        onVolver={() => setVista('ver')}
+                    />
+                );
             case 'actualizar':
                 return <ActualizarStock usuario={usuario} />;
             case 'historial':
@@ -56,6 +73,7 @@ const VistaGestionProductos = ({ onVolver, usuario }) => {
                         Actualizar stock
                     </button>
 
+                    {/*
                     <button
                         className={`gestion-menu-item menu-historial ${vista === 'historial' ? 'activo' : ''}`}
                         onClick={() => setVista('historial')}
@@ -66,6 +84,7 @@ const VistaGestionProductos = ({ onVolver, usuario }) => {
                         </svg>
                         Historial de movimientos
                     </button>
+                    */}
 
                     <button className="gestion-menu-item menu-volver" onClick={onVolver}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

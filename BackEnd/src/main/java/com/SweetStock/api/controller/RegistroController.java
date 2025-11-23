@@ -45,8 +45,8 @@ public class RegistroController {
         if (request.getProductoId() == null || request.getUsuarioId() == null) {
             return ResponseEntity.badRequest().body("productoId y usuarioId son obligatorios");
         }
-        if (request.getEstado() == null || !(request.getEstado().equalsIgnoreCase("ingreso") || request.getEstado().equalsIgnoreCase("despacho"))) {
-            return ResponseEntity.badRequest().body("estado debe ser 'ingreso' o 'despacho'");
+        if (request.getEstado() == null || !(request.getEstado().equalsIgnoreCase("ingreso") || request.getEstado().equalsIgnoreCase("salida"))) {
+            return ResponseEntity.badRequest().body("estado debe ser 'ingreso' o 'salida'");
         }
         int cajasMov = request.getCantidadCaja() != null ? request.getCantidadCaja() : 0;
         int unidadesMov = request.getCantidadUnidad() != null ? request.getCantidadUnidad() : 0;
@@ -78,7 +78,7 @@ public class RegistroController {
         if (request.getEstado().equalsIgnoreCase("ingreso")) {
             stockCajaDespues += cajasMov;
             stockUnidadDespues += unidadesMov;
-        } else { // despacho
+        } else { // salida
             if (cajasMov > stockCajaAntes) return ResponseEntity.badRequest().body("Stock de cajas insuficiente");
             if (unidadesMov > stockUnidadAntes) return ResponseEntity.badRequest().body("Stock de unidades insuficiente");
             stockCajaDespues -= cajasMov;
@@ -111,7 +111,7 @@ public class RegistroController {
     public static class RegistroMovimientoRequest {
         private Integer productoId;
         private Integer usuarioId;
-        private String estado; // ingreso | despacho
+        private String estado; // ingreso | salida
         private Integer cantidadCaja;
         private Integer cantidadUnidad;
         private String observaciones;

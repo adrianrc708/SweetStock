@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./AlmaceneroPanel.css";
 import VistaGestionProductos from "./VistaGestionProductos";
+import VistaReportes from "./VistaReportes";
 
 const AlmaceneroPanel = ({ usuario }) => {
     const [vistaActual, setVistaActual] = useState("inicio");
@@ -9,6 +10,13 @@ const AlmaceneroPanel = ({ usuario }) => {
         return (
             <VistaGestionProductos
                 usuario={usuario}
+                onVolver={() => setVistaActual("inicio")}
+            />
+        );
+    }
+    if (vistaActual === "reportes") {
+        return (
+            <VistaReportes
                 onVolver={() => setVistaActual("inicio")}
             />
         );
@@ -46,7 +54,7 @@ const AlmaceneroPanel = ({ usuario }) => {
                         </div>
                         <h3>Reportes</h3>
                         <p>Ver estadísticas generales del negocio.</p>
-                        <button className="almacenero-boton">Ver reportes</button>
+                        <button className="almacenero-boton" onClick={() => setVistaActual("reportes")}>Ver reportes</button>
                     </div>
                 </div>
             </div>

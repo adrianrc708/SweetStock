@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import './AdminPanel.css';
 
-const TablaInventario = () => {
+const TablaInventario = ({ onEditar }) => {
     const [inventario, setInventario] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
 
     const [filtroNombre, setFiltroNombre] = useState('');
     const [filtroMarca, setFiltroMarca] = useState('');
+
+    // ← CORREGIDO: "usuario" en vez de "user"
+    const usuario = JSON.parse(sessionStorage.getItem("usuario"));
+    const rol = usuario?.rol || ""; // Admin, almacenero, vendedor
+
+    console.log("ROL DEL USUARIO:", rol);
 
     const fetchInventario = () => {
         setCargando(true);
@@ -17,12 +23,9 @@ const TablaInventario = () => {
         if (filtroNombre) params.append('nombre', filtroNombre);
         if (filtroMarca) params.append('marca', filtroMarca);
 
-        // SCRUM-92: Consumir endpoint
         fetch(`http://localhost:8080/api/inventario?${params.toString()}`)
             .then(res => {
-                if (!res.ok) {
-                    throw new Error('No se pudo cargar el inventario');
-                }
+                if (!res.ok) throw new Error('No se pudo cargar el inventario');
                 return res.json();
             })
             .then(data => {
@@ -51,7 +54,11 @@ const TablaInventario = () => {
 
             <form className="tabla-header" onSubmit={handleBuscar} style={{ justifyContent: 'flex-start', gap: '15px' }}>
                 <div className="filtro-busqueda">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
                     <input
                         type="text"
                         className="input-busqueda"
@@ -60,8 +67,13 @@ const TablaInventario = () => {
                         onChange={(e) => setFiltroNombre(e.target.value)}
                     />
                 </div>
+
                 <div className="filtro-busqueda">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
                     <input
                         type="text"
                         className="input-busqueda"
@@ -70,6 +82,7 @@ const TablaInventario = () => {
                         onChange={(e) => setFiltroMarca(e.target.value)}
                     />
                 </div>
+
                 <button type="submit" className="admin-boton-pequeño editar" style={{ padding: '10px 16px' }}>
                     Buscar
                 </button>
@@ -84,16 +97,20 @@ const TablaInventario = () => {
                         <table className="tabla-usuarios">
                             <thead>
                             <tr>
-                                <th>ID Producto</th>
-                                <th>Nombre</th>
-                                <th>Marca</th>
-                                <th>Descripción</th>
-                                <th>Unid. por Caja</th>
-                                <th>Cajas (Stock)</th>
-                                <th>Unidades (Stock)</th>
-                                <th>Total Unidades</th>
+                                <th>ID PRODUCTO</th>
+                                <th>NOMBRE</th>
+                                <th>MARCA</th>
+                                <th>DESCRIPCIÓN</th>
+                                <th>UNID. POR CAJA</th>
+                                <th>CAJAS (STOCK)</th>
+                                <th>UNIDADES (STOCK)</th>
+                                <th>TOTAL UNIDADES</th>
+
+                                {/* Solo admin y almacenero ven ACCIONES */}
+                                {rol !== "vendedor" && <th>ACCIONES</th>}
                             </tr>
                             </thead>
+
                             <tbody>
                             {inventario.length > 0 ? (
                                 inventario.map((item) => {
@@ -109,11 +126,22 @@ const TablaInventario = () => {
                                             <td>{item.producto.nombre}</td>
                                             <td>{item.producto.marca}</td>
                                             <td>{item.producto.descripcion}</td>
-                                            {/* --- DATO AÑADIDO --- */}
                                             <td>{unidPorCaja}</td>
                                             <td>{cantCajasStock}</td>
                                             <td>{cantUnidadesStock}</td>
                                             <td style={{ fontWeight: 'bold' }}>{totalUnidades}</td>
+
+                                            {/* Solo admin y almacenero ven botón de editar */}
+                                            {rol !== "vendedor" && (
+                                                <td>
+                                                    <button
+                                                        className="admin-boton-pequeño editar"
+                                                        onClick={() => onEditar(item.producto.producto_id)}
+                                                    >
+                                                        Editar
+                                                    </button>
+                                                </td>
+                                            )}
                                         </tr>
                                     );
                                 })

@@ -13,6 +13,7 @@ public interface RegistroRepository extends JpaRepository<Registro, Long> {
     List<Registro> findByProducto(Producto producto);
     List<Registro> findByUsuarioRegistro(Usuario usuario);
     List<Registro> findByEstado(String estado);
+    List<Registro> findByEstadoSalida(String estado);
 
     @Query("SELECT r FROM Registro r WHERE r.fechaRegistro BETWEEN :desde AND :hasta ORDER BY r.fechaRegistro DESC, r.horaRegistro DESC")
     List<Registro> findRangoFechas(LocalDate desde, LocalDate hasta);

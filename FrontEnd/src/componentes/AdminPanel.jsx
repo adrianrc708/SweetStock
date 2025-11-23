@@ -5,6 +5,7 @@ import ListaUsuarios from "./ListaUsuarios";
 import EditarUsuario from "./EditarUsuario";
 import EliminarUsuario from "./EliminarUsuario";
 import VistaGestionProductos from "./VistaGestionProductos";
+import VistaReportes from "./VistaReportes";
 
 const VistaGestionUsuarios = ({ onVolver, usuario }) => {
     const [opcionActual, setOpcionActual] = useState(null);
@@ -134,6 +135,14 @@ const AdminPanel = ({ usuario }) => {
         );
     }
 
+    if (vistaActual === "reportes") {
+        return (
+            <VistaReportes
+                onVolver={() => setVistaActual("inicio")}
+            />
+        );
+    }
+
     return (
         <div className="admin-container">
             <div className="admin-header">
@@ -181,7 +190,7 @@ const AdminPanel = ({ usuario }) => {
                         </div>
                         <h3>Reportes</h3>
                         <p>Ver estadísticas generales del negocio.</p>
-                        <button className="admin-boton">Ver reportes</button>
+                        <button className="admin-boton" onClick={() => setVistaActual("reportes")}>Ver reportes</button>
                     </div>
                 </div>
             </div>

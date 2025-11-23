@@ -32,17 +32,21 @@ function Login({onLoginSuccess }){
         return JSON.parse(mensaje);
     })
     .then((usuario) => {
-        setModalConfig({
-            isOpen: true,
-            title: "¡Bienvenido!",
-            message: `Inicio de sesión exitoso. Bienvenido ${usuario.nombre || usuario.usuario}`,
-            type: "success",
-            onClose: () => {
-                setModalConfig({ isOpen: false, title: "", message: "", type: "info" });
-                onLoginSuccess(usuario);
-            }
-        });
-    })
+    // 👉 Guardar usuario en sessionStorage
+    sessionStorage.setItem("usuario", JSON.stringify(usuario));
+
+    setModalConfig({
+        isOpen: true,
+        title: "¡Bienvenido!",
+        message: `Inicio de sesión exitoso. Bienvenido ${usuario.nombre || usuario.usuario}`,
+        type: "success",
+        onClose: () => {
+            setModalConfig({ isOpen: false, title: "", message: "", type: "info" });
+            onLoginSuccess(usuario);
+        }
+    });
+})
+
     .catch((err) => console.error(err));
     };
 
