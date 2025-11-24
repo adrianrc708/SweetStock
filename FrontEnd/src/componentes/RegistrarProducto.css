@@ -1,0 +1,94 @@
+/* ====== CONTENEDOR GENERAL ====== */
+.registrar-producto-container {
+    width: 80%;
+    margin: 2rem auto;
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* ====== TÍTULO ====== */
+.registrar-producto-container h2 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 2rem;
+}
+
+/* ====== FORMULARIO ====== */
+.registrar-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.3rem;
+    width: 70%;
+    margin: 0 auto;
+}
+
+/* ====== LABEL ====== */
+.registrar-form label {
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 5px;
+}
+
+/* ====== INPUTS ====== */
+.registrar-form input,
+.registrar-form select {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.registrar-form input:focus,
+.registrar-form select:focus {
+    outline: none;
+    border-color: #ff5ba0;
+    box-shadow: 0 0 4px rgba(255, 91, 160, 0.4);
+}
+
+/* ====== BOTÓN REGISTRAR ====== */
+.btn-registrar {
+    width: auto; /* Cambiado de 100% a auto */
+    padding: 10px 20px; /* Ajusta horizontal y vertical */
+    border: none;
+    cursor: pointer;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    background-color: #ff5ba0;
+    color: white;
+    transition: background 0.2s ease;
+    margin-top: 10px;
+}
+
+.btn-registrar:hover {
+    background-color: #e64f8c;
+}
+
+/* ====== BOTÓN VOLVER ====== */
+/* ====== BOTÓN VOLVER ====== */
+.btn-volver {
+    width: auto; /* Cambiado de 40% a auto */
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    background-color: #555;
+    color: white;
+    transition: background 0.2s ease;
+    margin: 15px auto 0; /* Centrado */
+    display: block;
+}
+
+.btn-volver:hover {
+    background-color: #333;
+}
+

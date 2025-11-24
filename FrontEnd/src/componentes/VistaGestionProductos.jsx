@@ -3,7 +3,7 @@ import "./AlmaceneroPanel.css";
 import TablaInventario from "./TablaInventario";
 import ActualizarStock from "./ActualizarStock";
 import EditarProducto from './EditarProducto';
-
+import RegistrarProducto from './RegistrarProducto';
 
 const VistaGestionProductos = ({ onVolver, usuario }) => {
     const [productoId, setProductoId] = useState(null);
@@ -29,6 +29,14 @@ const VistaGestionProductos = ({ onVolver, usuario }) => {
                 );
             case 'actualizar':
                 return <ActualizarStock usuario={usuario} />;
+
+            case 'registrar':
+                return (
+                    <RegistrarProducto
+                        onVolver={() => setVista('menu')}
+                    />
+                );
+
             case 'historial':
                 return <div className="contenido-placeholder"><h3>Historial de Movimientos</h3><p>Vista no implementada.</p></div>;
             default: // 'menu'
@@ -58,6 +66,19 @@ const VistaGestionProductos = ({ onVolver, usuario }) => {
                             <line x1="12" y1="22.08" x2="12" y2="12"></line>
                         </svg>
                         Ver inventario
+                    </button>
+
+                    <button
+                        className={`gestion-menu-item menu-registrar ${vista === 'registrar' ? 'activo' : ''}`}
+                        onClick={() => setVista('registrar')}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M12 5v14"></path>
+                            <path d="M5 12h14"></path>
+                        </svg>
+                        Registrar Producto
                     </button>
 
                     <button
