@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./AdminPanel.css";
 import ReporteMovimientos from "./ReporteMovimientos";
+import ReporteInventarioGeneral from './ReporteInventarioGeneral';
 
 const VistaReportes = ({ onVolver }) => {
     const [opcion, setOpcion] = useState(null);
@@ -8,12 +9,7 @@ const VistaReportes = ({ onVolver }) => {
     const renderContenido = () => {
         switch (opcion) {
             case 'inventario':
-                return (
-                    <div className="contenido-placeholder">
-                        <h3>Reporte de Inventario General</h3>
-                        <p>Aquí se mostrará el reporte general del inventario.</p>
-                    </div>
-                );
+                return <ReporteInventarioGeneral />;
             case 'movimientos':
                 return <ReporteMovimientos />;
             default:

@@ -6,41 +6,42 @@ const EditarProducto = ({ productoId, onVolver }) => {
     const [mensaje, setMensaje] = useState("");
 
     useEffect(() => {
-    console.log("ID recibido:", productoId);
+        console.log("ID recibido:", productoId);
 
-    fetch(`http://localhost:8080/api/productos/${productoId}`)
-        .then(res => res.json())
-        .then(data => setProducto(data))
-        .catch(() => setMensaje("Error cargando el producto"));
-}, [productoId]);
-
-
-
-    const handleSubmit = (e) => {  //handleSubmit modificado
-    e.preventDefault();
-
-    const productoParaEnviar = {
-    producto_id: productoId,   // ← Agregado
-    nombre: producto.nombre,
-    marca: producto.marca,
-    descripcion: producto.descripcion,
-    cantidadCaja: Number(producto.cantidadCaja),
-    peso: Number(producto.peso)
-};
+        fetch(`http://localhost:8080/api/productos/${productoId}`)
+            .then(res => res.json())
+            .then(data => setProducto(data))
+            .catch(() => setMensaje("Error cargando el producto"));
+    }, [productoId]);
 
 
-    fetch(`http://localhost:8080/api/productos/${productoId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(productoParaEnviar)
-    })
-    .then(res => {
-        if (!res.ok) throw new Error("Error actualizando producto");
-        return res.json();
-    })
-    .then(() => setMensaje("Producto actualizado correctamente"))
-    .catch(() => setMensaje("Error al actualizar"));
-};
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const productoParaEnviar = {
+            producto_id: productoId,
+            nombre: producto.nombre,
+            marca: producto.marca,
+            descripcion: producto.descripcion,
+            cantidadCaja: Number(producto.cantidadCaja),
+            peso: Number(producto.peso),
+            precioUnitario: Number(producto.precioUnitario)
+        };
+
+
+        fetch(`http://localhost:8080/api/productos/${productoId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(productoParaEnviar)
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("Error actualizando producto");
+                return res.json();
+            })
+            .then(() => setMensaje("Producto actualizado correctamente"))
+            .catch(() => setMensaje("Error al actualizar"));
+    };
 
 
     if (!producto) return <p>Cargando...</p>;
@@ -89,6 +90,15 @@ const EditarProducto = ({ productoId, onVolver }) => {
                     type="number"
                     value={producto.peso}
                     onChange={(e) => setProducto({ ...producto, peso: e.target.value })}
+                />
+
+                <label>Precio Unitario (S/):</label>
+                <input
+                    type="number"
+                    value={producto.precioUnitario || ''}
+                    onChange={(e) => setProducto({ ...producto, precioUnitario: e.target.value })}
+                    min="0"
+                    step="0.01"
                 />
 
                 <div className="botones">

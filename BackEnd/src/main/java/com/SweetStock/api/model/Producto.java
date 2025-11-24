@@ -30,9 +30,13 @@ public class Producto {
     @Column(name = "peso")
     private Double peso;
 
+    @Column(name = "precio_unitario")
+    private Double precioUnitario;
+
     @OneToOne(mappedBy = "producto")
     @JsonIgnore
     private Inventario inventario;
+
 
     // Constructores
     public Producto() {}
@@ -51,6 +55,13 @@ public class Producto {
     public Inventario getInventario() { return inventario; }
     public void setInventario(Inventario inventario) { this.inventario = inventario; }
 
+    public Double getPrecioUnitario() {
+        return precioUnitario;
+    }
+
+    public void setPrecioUnitario(Double precioUnitario) {
+        this.precioUnitario = precioUnitario;
+    }
 
     public Integer getCantidadCaja() {
         return cantidadCaja;
@@ -59,4 +70,6 @@ public class Producto {
     public void setCantidadCaja(Integer cantidadCaja) {
         this.cantidadCaja = cantidadCaja;
     }
+
+
 }

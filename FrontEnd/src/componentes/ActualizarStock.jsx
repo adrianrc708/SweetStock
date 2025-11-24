@@ -169,7 +169,7 @@ const ActualizarStock = ({ usuario }) => {
             const body = {
                 productoId: productoSeleccionado.producto?.producto_id,
                 usuarioId: userId,
-                estado: tipoMovimiento === 'ingreso' ? 'ingreso' : 'despacho',
+                estado: tipoMovimiento === 'ingreso' ? 'ingreso' : 'salida',
                 cantidadCaja: cajasNum > 0 ? cajasNum : 0,
                 cantidadUnidad: unidadesNum > 0 ? unidadesNum : 0,
                 observaciones
