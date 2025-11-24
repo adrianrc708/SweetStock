@@ -43,6 +43,7 @@ public class ProductoController {
         p.setDescripcion(cambios.getDescripcion());
         p.setCantidadCaja(cambios.getCantidadCaja());
         p.setPeso(cambios.getPeso());
+        p.setPrecioUnitario(cambios.getPrecioUnitario());
 
         productoRepository.save(p);
 

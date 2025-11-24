@@ -15,4 +15,11 @@ public interface InventarioRepository extends JpaRepository<Inventario, Integer>
     List<Inventario> findWithFilters(
             @Param("nombre") String nombre,
             @Param("marca") String marca);
+
+    @Query("SELECT i FROM Inventario i JOIN i.producto p WHERE " +
+            "(:productoId IS NULL OR p.producto_id = :productoId) AND " +
+            "(:marca IS NULL OR :marca = '' OR p.marca LIKE %:marca%)")
+    List<Inventario> findReporteFilters(
+            @Param("productoId") Integer productoId,
+            @Param("marca") String marca);
 }
