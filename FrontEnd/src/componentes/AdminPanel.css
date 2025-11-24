@@ -553,3 +553,82 @@
     width: 100%;
     margin-bottom: 0;
 }
+
+@media print {
+    .gestion-sidebar,
+    .app-header,
+    .admin-header,
+    .tabla-header,
+    .tabla-filtros,
+    .paginacion,
+    .admin-boton-pequeño,
+    .filtro-busqueda,
+    button {
+        display: none !important;
+    }
+
+    /*
+    @page {
+        size: landscape;
+        margin: 10mm;
+    }
+    */
+
+    body, #root, .gestion-layout {
+        background-color: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+        display: block !important;
+    }
+
+    .gestion-contenido, .tabla-container {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+        position: static !important;
+    }
+
+    .tabla-scroll-container {
+        max-height: none !important;
+        overflow: visible !important;
+        display: block !important;
+        padding-bottom: 20px !important;
+    }
+
+    table {
+        width: 100% !important;
+        page-break-inside: auto;
+        border-collapse: collapse;
+    }
+
+    tr {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        page-break-after: auto;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    tfoot {
+        display: table-footer-group;
+    }
+
+    th, td {
+        border: 1px solid #ddd !important;
+        padding: 8px !important;
+        color: black !important;
+        font-size: 10pt !important;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}

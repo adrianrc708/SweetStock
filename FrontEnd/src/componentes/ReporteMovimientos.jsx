@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 const API_URL = "http://localhost:8080/api/registros";
 
@@ -92,27 +90,8 @@ const ReporteMovimientos = () => {
             return 0;
         });
 
-    const exportPDF = () => {
-        const input = document.getElementById('reporte-movimientos-pdf'); // ID del contenedor a capturar
-        if (!input) return;
-
-        const pdfButton = document.getElementById('export-pdf-button-mov');
-        if (pdfButton) pdfButton.style.display = 'none';
-
-        html2canvas(input, { scale: 2 }).then((canvas) => {
-            const imgData = canvas.toDataURL('image/jpeg');
-            const pdf = new jsPDF('l', 'mm', 'a4'); // 'l' = horizontal
-            const imgWidth = 280; // Ancho para A4 horizontal
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-            pdf.setFontSize(14);
-            pdf.text("Reporte de Movimientos de Inventario - SweetStock", 10, 10);
-
-            pdf.addImage(imgData, 'JPEG', 10, 15, imgWidth, imgHeight);
-            pdf.save(`Reporte_Movimientos_${new Date().toISOString().slice(0, 10)}.pdf`);
-        }).finally(() => {
-            if (pdfButton) pdfButton.style.display = 'block';
-        });
+    const handleImprimir = () => {
+        window.print();
     };
 
     return (
@@ -198,13 +177,13 @@ const ReporteMovimientos = () => {
                 <button
                     type="button"
                     className="admin-boton-pequeño editar"
-                    onClick={exportPDF}
+                    onClick={handleImprimir}
                     disabled={!mostrarTabla || movimientosFiltrados.length === 0}
                     style={{ background: '#dc3545', padding: '10px 16px', minWidth: 120, marginLeft: 15 }}
-                    id="export-pdf-button-mov" // ID AGREGADO
+                    id="export-pdf-button-mov"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '6px'}}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="10" y2="9"></line></svg>
-                    Exportar PDF
+                    Imprimir / Guardar PDF
                 </button>
             </form>
             {mostrarTabla && (
@@ -217,7 +196,7 @@ const ReporteMovimientos = () => {
                             {tipo ? `Tipo: ${tipo === 'ingreso' ? 'Ingreso' : 'Salida'}` : 'Todos los tipos'}
                             {" | "}
                             {usuario ? `Usuario: ${usuario}` : 'Todos los usuarios'}
-                        </span>
+            </span>
                     </div>
                     {loading ? (
                         <p>Cargando movimientos...</p>
@@ -266,7 +245,7 @@ const ReporteMovimientos = () => {
                         </div>
                     )}
                 </div>
-                )}
+            )}
         </div>
     );
 };
