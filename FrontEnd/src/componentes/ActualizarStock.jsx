@@ -416,53 +416,60 @@ const ActualizarStock = ({ usuario }) => {
             {!cargando && !error && (
                 <>
                     <div className="tabla-scroll-container">
-                        <table className="tabla-usuarios">
+                        <table className="tabla-usuarios" style={{ borderCollapse: 'separate', borderSpacing: 0, minWidth: 900 }}>
                             <thead>
-                                <tr>
-                                    <th>ID Producto</th>
-                                    <th>Nombre</th>
-                                    <th>Marca</th>
-                                    <th>Cajas (Stock)</th>
-                                    <th>Unidades (Stock)</th>
-                                    <th>Total Unidades</th>
-                                    <th>Acción</th>
-                                </tr>
+                            <tr style={{ height: '32px' }}>
+                                <th>ID PRODUCTO</th>
+                                <th>NOMBRE</th>
+                                <th>MARCA</th>
+                                <th>DESCRIPCIÓN</th>
+                                <th style={{ textAlign: 'right' }}>UNID. POR CAJA</th>
+                                <th style={{ textAlign: 'right' }}>CAJAS (STOCK)</th>
+                                <th style={{ textAlign: 'right' }}>UNIDADES (STOCK)</th>
+                                <th style={{ textAlign: 'right' }}>TOTAL UNIDADES</th>
+                                <th>ACCIONES</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                {inventario.length > 0 ? (
-                                    inventario.map((item) => {
-                                        const cantCajasStock = item.cantidadCaja || 0;
-                                        const cantUnidadesStock = item.cantidadUnidad || 0;
-                                        const unidPorCaja = item.producto?.cantidadCaja || 0;
-                                        const totalUnidades = (cantCajasStock * unidPorCaja) + cantUnidadesStock;
-
-                                        return (
-                                            <tr key={item.inventario_id}>
-                                                <td>{item.producto?.producto_id || 'N/A'}</td>
-                                                <td>{item.producto?.nombre || 'Sin nombre'}</td>
-                                                <td>{item.producto?.marca || 'Sin marca'}</td>
-                                                <td>{cantCajasStock}</td>
-                                                <td>{cantUnidadesStock}</td>
-                                                <td style={{ fontWeight: 'bold' }}>{totalUnidades}</td>
-                                                <td>
-                                                    <button
-                                                        className="admin-boton-pequeño editar"
-                                                        onClick={() => abrirFormulario(item)}
-                                                        title="Actualizar stock"
-                                                    >
-                                                        Actualizar
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })
-                                ) : (
-                                    <tr>
-                                        <td colSpan="7" style={{ textAlign: 'center', fontStyle: 'italic' }}>
-                                            No se encontraron productos en el inventario que coincidan con los filtros.
-                                        </td>
-                                    </tr>
-                                )}
+                            {inventario.length > 0 ? (
+                                inventario.map((item, idx) => {
+                                    const cantCajasStock = item.cantidadCaja || 0;
+                                    const cantUnidadesStock = item.cantidadUnidad || 0;
+                                    const unidPorCaja = item.producto?.cantidadCaja || 0;
+                                    const totalUnidades = (cantCajasStock * unidPorCaja) + cantUnidadesStock;
+                                    const rowStyle = {
+                                        height: '32px',
+                                        background: idx % 2 === 0 ? '#f8f9fa' : '#fff',
+                                    };
+                                    return (
+                                        <tr key={item.inventario_id} style={rowStyle}>
+                                            <td>{item.producto.producto_id}</td>
+                                            <td>{item.producto.nombre}</td>
+                                            <td>{item.producto.marca}</td>
+                                            <td>{item.producto.descripcion}</td>
+                                            <td style={{ textAlign: 'right' }}>{unidPorCaja}</td>
+                                            <td style={{ textAlign: 'right' }}>{cantCajasStock}</td>
+                                            <td style={{ textAlign: 'right' }}>{cantUnidadesStock}</td>
+                                            <td style={{ textAlign: 'right', fontWeight: 'bold' }}>{totalUnidades}</td>
+                                            <td>
+                                                <button
+                                                    className="admin-boton-pequeño editar"
+                                                    onClick={() => abrirFormulario(item)}
+                                                    title="Actualizar stock"
+                                                >
+                                                    Actualizar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            ) : (
+                                <tr>
+                                    <td colSpan={9} style={{ textAlign: 'center', fontStyle: 'italic', height: '32px' }}>
+                                        No se encontraron productos en el inventario que coincidan con los filtros.
+                                    </td>
+                                </tr>
+                            )}
                             </tbody>
                         </table>
                     </div>

@@ -113,9 +113,9 @@ const ListaUsuarios = ({ onEditar, onVolver, usuarioActual }) => {
 
             {usuariosFiltrados.length > 0 && (
                 <>
-                <table className="tabla-usuarios">
+                <table className="tabla-usuarios" style={{ borderCollapse: 'separate', borderSpacing: 0, minWidth: 900 }}>
                     <thead>
-                        <tr>
+                        <tr style={{ height: '32px' }}>
                             <th>ID</th>
                             <th>DNI</th>
                             <th>Usuario</th>
@@ -126,29 +126,35 @@ const ListaUsuarios = ({ onEditar, onVolver, usuarioActual }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {usuariosPaginados.map(usuario => (
-                            <tr key={usuario.id}>
-                                <td>{usuario.id}</td>
-                                <td>{usuario.dni || 'N/A'}</td>
-                                <td>{usuario.usuario || 'N/A'}</td>
-                                <td>{usuario.nombre}</td>
-                                <td>{usuario.apellido || 'N/A'}</td>
-                                <td>{usuario.rol}</td>
-                                <td>
-                                    <button
-                                        className="admin-boton-pequeño editar"
-                                        onClick={() => handleEditar(usuario)}
-                                        title="Editar usuario"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}>
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                        </svg>
-                                        Editar
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                        {usuariosPaginados.map((usuario, idx) => {
+                            const rowStyle = {
+                                height: '32px',
+                                background: idx % 2 === 0 ? '#f8f9fa' : '#fff',
+                            };
+                            return (
+                                <tr key={usuario.id} style={rowStyle}>
+                                    <td style={{ textAlign: 'right' }}>{usuario.id}</td>
+                                    <td>{usuario.dni || 'N/A'}</td>
+                                    <td>{usuario.usuario || 'N/A'}</td>
+                                    <td>{usuario.nombre}</td>
+                                    <td>{usuario.apellido || 'N/A'}</td>
+                                    <td>{usuario.rol}</td>
+                                    <td>
+                                        <button
+                                            className="admin-boton-pequeño editar"
+                                            onClick={() => handleEditar(usuario)}
+                                            title="Editar usuario"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}>
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                            Editar
+                                        </button>
+                                    </td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
 

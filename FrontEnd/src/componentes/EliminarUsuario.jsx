@@ -136,9 +136,9 @@ const EliminarUsuario = ({ onVolver }) => {
 
             {usuariosFiltrados.length > 0 && (
                 <>
-                <table className="tabla-usuarios">
+                <table className="tabla-usuarios" style={{ borderCollapse: 'separate', borderSpacing: 0, minWidth: 900 }}>
                     <thead>
-                        <tr>
+                        <tr style={{ height: '32px' }}>
                             <th>ID</th>
                             <th>DNI</th>
                             <th>Usuario</th>
@@ -149,31 +149,37 @@ const EliminarUsuario = ({ onVolver }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {usuariosPaginados.map((u) => (
-                            <tr key={u.id}>
-                                <td>{u.id}</td>
-                                <td>{u.dni || 'N/A'}</td>
-                                <td>{u.usuario || 'N/A'}</td>
-                                <td>{u.nombre}</td>
-                                <td>{u.apellido || 'N/A'}</td>
-                                <td>{u.rol}</td>
-                                <td>
-                                    <button
-                                        className="admin-boton-pequeño eliminar"
-                                        onClick={() => handleEliminar(u.id, u.nombre)}
-                                        title="Eliminar usuario"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}>
-                                            <polyline points="3 6 5 6 21 6"></polyline>
-                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                            <line x1="10" y1="11" x2="10" y2="17"></line>
-                                            <line x1="14" y1="11" x2="14" y2="17"></line>
-                                        </svg>
-                                        Eliminar
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                        {usuariosPaginados.map((usuario, idx) => {
+                            const rowStyle = {
+                                height: '32px',
+                                background: idx % 2 === 0 ? '#f8f9fa' : '#fff',
+                            };
+                            return (
+                                <tr key={usuario.id} style={rowStyle}>
+                                    <td style={{ textAlign: 'right' }}>{usuario.id}</td>
+                                    <td>{usuario.dni || 'N/A'}</td>
+                                    <td>{usuario.usuario || 'N/A'}</td>
+                                    <td>{usuario.nombre}</td>
+                                    <td>{usuario.apellido || 'N/A'}</td>
+                                    <td>{usuario.rol}</td>
+                                    <td>
+                                        <button
+                                            className="admin-boton-pequeño eliminar"
+                                            onClick={() => handleEliminar(usuario.id, usuario.nombre)}
+                                            title="Eliminar usuario"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}>
+                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path>
+                                                <line x1="10" y1="11" x2="10" y2="17"></line>
+                                                <line x1="14" y1="11" x2="14" y2="17"></line>
+                                            </svg>
+                                            Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
 

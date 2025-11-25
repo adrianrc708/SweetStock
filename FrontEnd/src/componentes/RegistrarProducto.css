@@ -1,70 +1,86 @@
 /* ====== CONTENEDOR GENERAL ====== */
 .registrar-producto-container {
-    width: 80%;
-    margin: 2rem auto;
-    background: #ffffff;
-    border-radius: 15px;
-    padding: 2.5rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 30px 50px 40px;
+    max-width: 700px;
+    margin: 0 auto;
+    border: 1px solid #e8e8e8;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
 /* ====== TÍTULO ====== */
 .registrar-producto-container h2 {
     text-align: center;
-    font-size: 2rem;
+    font-size: 28px;
     font-weight: 700;
-    color: #333;
-    margin-bottom: 2rem;
+    color: #1a1a1a;
+    margin-bottom: 24px;
 }
 
 /* ====== FORMULARIO ====== */
 .registrar-form {
     display: flex;
     flex-direction: column;
-    gap: 1.3rem;
-    width: 70%;
-    margin: 0 auto;
+    gap: 16px;
+}
+
+@media (min-width: 600px) {
+    .registrar-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .form-full {
+        grid-column: 1 / -1;
+    }
 }
 
 /* ====== LABEL ====== */
 .registrar-form label {
     font-weight: 600;
     color: #444;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
+    font-size: 14px;
 }
 
 /* ====== INPUTS ====== */
 .registrar-form input,
 .registrar-form select {
     width: 100%;
-    padding: 12px 15px;
-    border-radius: 12px;
-    border: 1px solid #ddd;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 2px solid #e8e8e8;
     background: #f9f9f9;
-    font-size: 1rem;
+    font-size: 14px;
     transition: all 0.3s ease;
+    margin-top: 2px;
+    box-sizing: border-box;
+    font-family: inherit;
 }
 
 .registrar-form input:focus,
 .registrar-form select:focus {
     outline: none;
     border-color: #ff5ba0;
-    box-shadow: 0 0 4px rgba(255, 91, 160, 0.4);
+    box-shadow: 0 0 0 3px rgba(255, 91, 160, 0.1);
 }
 
 /* ====== BOTÓN REGISTRAR ====== */
 .btn-registrar {
-    width: auto; /* Cambiado de 100% a auto */
-    padding: 10px 20px; /* Ajusta horizontal y vertical */
+    width: 100%;
+    padding: 12px 28px;
     border: none;
     cursor: pointer;
-    border-radius: 12px;
-    font-size: 1rem;
+    border-radius: 10px;
+    font-size: 15px;
     font-weight: 600;
     background-color: #ff5ba0;
     color: white;
     transition: background 0.2s ease;
     margin-top: 10px;
+    grid-column: 1 / -1;
 }
 
 .btn-registrar:hover {
@@ -72,23 +88,21 @@
 }
 
 /* ====== BOTÓN VOLVER ====== */
-/* ====== BOTÓN VOLVER ====== */
 .btn-volver {
-    width: auto; /* Cambiado de 40% a auto */
-    padding: 10px 20px;
+    width: 100%;
+    padding: 12px 28px;
     border: none;
     cursor: pointer;
-    border-radius: 12px;
-    font-size: 1rem;
+    border-radius: 10px;
+    font-size: 15px;
     font-weight: 600;
     background-color: #555;
     color: white;
     transition: background 0.2s ease;
-    margin: 15px auto 0; /* Centrado */
+    margin: 15px auto 0;
     display: block;
 }
 
 .btn-volver:hover {
     background-color: #333;
 }
-

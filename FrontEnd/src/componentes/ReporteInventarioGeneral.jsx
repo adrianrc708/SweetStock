@@ -131,29 +131,43 @@ const ReporteInventarioGeneral = () => {
 
             {!loading && !error && (
                 <div className="tabla-scroll-container">
-                    <table className="tabla-usuarios">
+                    <table className="tabla-usuarios" style={{ borderCollapse: 'separate', borderSpacing: 0, minWidth: 900 }}>
                         <thead>
-                        <tr>
-                            <th>ID</th><th>Nombre</th><th>Marca</th><th>Unid. Caja</th><th>Stock Cajas</th><th>Stock Unid. Sueltas</th><th>Stock Total Unidades</th><th>Precio Unitario</th><th style={{textAlign: 'right'}}>Valor Total</th>
+                        <tr style={{ height: '32px' }}>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Marca</th>
+                            <th style={{ textAlign: 'right' }}>Unid. Caja</th>
+                            <th style={{ textAlign: 'right' }}>Stock Cajas</th>
+                            <th style={{ textAlign: 'right' }}>Stock Unid. Sueltas</th>
+                            <th style={{ textAlign: 'right' }}>Stock Total Unidades</th>
+                            <th style={{ textAlign: 'right' }}>Precio Unitario</th>
+                            <th style={{ textAlign: 'right' }}>Valor Total</th>
                         </tr>
                         </thead>
                         <tbody>
                         {reporte.length === 0 ? (
-                            <tr><td colSpan="9" className="mensaje-vacio">No hay datos que coincidan con los filtros.</td></tr>
+                            <tr><td colSpan="9" className="mensaje-vacio" style={{ height: '32px' }}>No hay datos que coincidan con los filtros.</td></tr>
                         ) : (
-                            reporte.map((item) => (
-                                <tr key={item.productoId}>
-                                    <td>{item.productoId}</td>
-                                    <td>{item.nombre}</td>
-                                    <td>{item.marca}</td>
-                                    <td>{item.unidadesPorCaja}</td>
-                                    <td>{item.stockCajas}</td>
-                                    <td>{item.stockUnidadesSueltas}</td>
-                                    <td><span style={{fontWeight: 'bold'}}>{item.stockTotalUnidades}</span></td>
-                                    <td>{formatoMoneda(item.precioUnitario)}</td>
-                                    <td style={{textAlign: 'right', fontWeight: 'bold'}}>{formatoMoneda(item.valorTotal)}</td>
-                                </tr>
-                            ))
+                            reporte.map((item, idx) => {
+                                const rowStyle = {
+                                    height: '32px',
+                                    background: idx % 2 === 0 ? '#f8f9fa' : '#fff',
+                                };
+                                return (
+                                    <tr key={item.productoId} style={rowStyle}>
+                                        <td>{item.productoId}</td>
+                                        <td>{item.nombre}</td>
+                                        <td>{item.marca}</td>
+                                        <td style={{ textAlign: 'right' }}>{item.unidadesPorCaja}</td>
+                                        <td style={{ textAlign: 'right' }}>{item.stockCajas}</td>
+                                        <td style={{ textAlign: 'right' }}>{item.stockUnidadesSueltas}</td>
+                                        <td style={{ textAlign: 'right' }}>{item.stockTotalUnidades}</td>
+                                        <td style={{ textAlign: 'right' }}>{formatoMoneda(item.precioUnitario)}</td>
+                                        <td style={{ textAlign: 'right' }}>{formatoMoneda(item.valorTotal)}</td>
+                                    </tr>
+                                );
+                            })
                         )}
                         </tbody>
                     </table>

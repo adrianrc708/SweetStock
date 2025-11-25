@@ -19,6 +19,33 @@ const ReporteMovimientos = () => {
         usuario: ""
     });
 
+    const movimientosFiltrados = movimientos
+        .filter((mov) => {
+            const fecha = mov.fechaRegistro || mov.fecha;
+            const fechaValida =
+                (!fechaInicio || fecha >= fechaInicio) &&
+                (!fechaFin || fecha <= fechaFin);
+            const usuarioValido = !usuario || (mov.usuarioRegistro?.nombre?.toLowerCase().includes(usuario.toLowerCase()) || mov.usuario?.toLowerCase().includes(usuario.toLowerCase()));
+            return fechaValida && usuarioValido;
+        })
+        .sort((a, b) => {
+            const fechaA = a.fechaRegistro || a.fecha;
+            const fechaB = b.fechaRegistro || b.fecha;
+            if (fechaA > fechaB) return -1;
+            if (fechaA < fechaB) return 1;
+            const horaA = a.horaRegistro || "00:00:00";
+            const horaB = b.horaRegistro || "00:00:00";
+            if (horaA > horaB) return -1;
+            if (horaA < horaB) return 1;
+            return 0;
+        });
+
+    // Paginación
+    const filasPorPagina = 10;
+    const [paginaActual, setPaginaActual] = useState(1);
+    const totalPaginas = Math.ceil(movimientosFiltrados.length / filasPorPagina);
+    const movimientosPaginados = movimientosFiltrados.slice((paginaActual - 1) * filasPorPagina, paginaActual * filasPorPagina);
+
     useEffect(() => {
         const fetchMovimientos = async () => {
             setLoading(true);
@@ -69,26 +96,9 @@ const ReporteMovimientos = () => {
         }
     };
 
-    const movimientosFiltrados = movimientos
-        .filter((mov) => {
-            const fecha = mov.fechaRegistro || mov.fecha;
-            const fechaValida =
-                (!fechaInicio || fecha >= fechaInicio) &&
-                (!fechaFin || fecha <= fechaFin);
-            const usuarioValido = !usuario || (mov.usuarioRegistro?.nombre?.toLowerCase().includes(usuario.toLowerCase()) || mov.usuario?.toLowerCase().includes(usuario.toLowerCase()));
-            return fechaValida && usuarioValido;
-        })
-        .sort((a, b) => {
-            const fechaA = a.fechaRegistro || a.fecha;
-            const fechaB = b.fechaRegistro || b.fecha;
-            if (fechaA > fechaB) return -1;
-            if (fechaA < fechaB) return 1;
-            const horaA = a.horaRegistro || "00:00:00";
-            const horaB = b.horaRegistro || "00:00:00";
-            if (horaA > horaB) return -1;
-            if (horaA < horaB) return 1;
-            return 0;
-        });
+    useEffect(() => {
+        setPaginaActual(1);
+    }, [fechaInicio, fechaFin, tipo, usuario, movimientosFiltrados.length]);
 
     const handleImprimir = () => {
         window.print();
@@ -204,44 +214,67 @@ const ReporteMovimientos = () => {
                         <p style={{color: 'red'}}>Error: {error}</p>
                     ) : (
                         <div className="tabla-scroll-container">
-                            <table className="tabla-usuarios">
+                            <table className="tabla-usuarios" style={{ borderCollapse: 'separate', borderSpacing: 0, minWidth: 900 }}>
                                 <thead>
-                                <tr>
+                                <tr style={{ height: '32px' }}>
+                                    <th>ID</th>
                                     <th>Fecha</th>
                                     <th>Hora</th>
                                     <th>Tipo</th>
                                     <th>Producto</th>
-                                    <th>
-                                        Cantidad<br/>
-                                        <span style={{fontWeight: 'normal', fontSize: '11px', color: '#888'}}>Cajas</span>
-                                    </th>
-                                    <th>
-                                        Cantidad<br/>
-                                        <span style={{fontWeight: 'normal', fontSize: '11px', color: '#888'}}>Unidades</span>
-                                    </th>
+                                    <th style={{ textAlign: 'right' }}>Cajas</th>
+                                    <th style={{ textAlign: 'right' }}>Unidades</th>
                                     <th>Usuario</th>
                                     <th>Observaciones</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {movimientosFiltrados.length === 0 ? (
+                                {movimientosPaginados.length === 0 ? (
                                     <tr><td colSpan={8} className="mensaje-vacio">No hay movimientos en el rango seleccionado.</td></tr>
                                 ) : (
-                                    movimientosFiltrados.map(mov => (
-                                        <tr key={mov.registroId || mov.id}>
-                                            <td>{mov.fechaRegistro || mov.fecha}</td>
-                                            <td>{mov.horaRegistro || "-"}</td>
-                                            <td>{mov.estado ? (mov.estado.charAt(0).toUpperCase() + mov.estado.slice(1)) : mov.tipo}</td>
-                                            <td>{mov.producto?.nombre || mov.producto || '-'}</td>
-                                            <td>{mov.cantidadCaja ?? '-'}</td>
-                                            <td>{mov.cantidadUnidad ?? '-'}</td>
-                                            <td>{mov.usuarioRegistro?.nombre || mov.usuario || '-'}</td>
-                                            <td>{mov.observaciones ?? '-'}</td>
-                                        </tr>
-                                    ))
+                                    movimientosPaginados.map((mov, idx) => {
+                                        const rowStyle = {
+                                            height: '32px',
+                                            background: idx % 2 === 0 ? '#f8f9fa' : '#fff',
+                                        };
+                                        return (
+                                            <tr key={mov.id || mov.registroId || idx} style={rowStyle}>
+                                                <td>{mov.id || mov.registroId}</td>
+                                                <td>{mov.fechaRegistro || mov.fecha}</td>
+                                                <td>{mov.horaRegistro || mov.hora}</td>
+                                                <td>{mov.estado || mov.tipo}</td>
+                                                <td>{mov.productoNombre || mov.producto?.nombre || ''}</td>
+                                                <td style={{ textAlign: 'right' }}>{mov.cantidadCaja ?? mov.cajas ?? ''}</td>
+                                                <td style={{ textAlign: 'right' }}>{mov.cantidadUnidad ?? mov.unidades ?? ''}</td>
+                                                <td>{mov.usuarioRegistro?.nombre || mov.usuario || ''}</td>
+                                                <td>{mov.observaciones || ''}</td>
+                                            </tr>
+                                        );
+                                    })
                                 )}
                                 </tbody>
                             </table>
+                        </div>
+                    )}
+                    {movimientosFiltrados.length > filasPorPagina && (
+                        <div className="paginacion">
+                            <button
+                                className="paginacion-boton"
+                                onClick={() => setPaginaActual(prev => Math.max(prev - 1, 1))}
+                                disabled={paginaActual === 1}
+                            >
+                                ← Anterior
+                            </button>
+                            <div className="paginacion-info">
+                                Página {paginaActual} de {totalPaginas} ({movimientosFiltrados.length} movimientos)
+                            </div>
+                            <button
+                                className="paginacion-boton"
+                                onClick={() => setPaginaActual(prev => Math.min(prev + 1, totalPaginas))}
+                                disabled={paginaActual === totalPaginas}
+                            >
+                                Siguiente →
+                            </button>
                         </div>
                     )}
                 </div>
@@ -251,3 +284,4 @@ const ReporteMovimientos = () => {
 };
 
 export default ReporteMovimientos;
+

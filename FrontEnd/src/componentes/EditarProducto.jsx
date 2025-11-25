@@ -1,24 +1,32 @@
 import React, { useState, useEffect } from "react";
 import "./EditarProducto.css";
+import Modal from "./Modal";
 
 const EditarProducto = ({ productoId, onVolver }) => {
     const [producto, setProducto] = useState(null);
-    const [mensaje, setMensaje] = useState("");
+    const [modalConfig, setModalConfig] = useState({ isOpen: false, title: "", message: "", type: "info" });
 
     useEffect(() => {
-        console.log("ID recibido:", productoId);
-
         fetch(`http://localhost:8080/api/productos/${productoId}`)
             .then(res => res.json())
             .then(data => setProducto(data))
-            .catch(() => setMensaje("Error cargando el producto"));
+            .catch(() => setModalConfig({
+                isOpen: true,
+                title: "Error",
+                message: "Error cargando el producto",
+                type: "error"
+            }));
     }, [productoId]);
 
+    const handleChange = (e) => {
+        setProducto({
+            ...producto,
+            [e.target.name]: e.target.value
+        });
+    };
 
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
         const productoParaEnviar = {
             producto_id: productoId,
             nombre: producto.nombre,
@@ -28,85 +36,111 @@ const EditarProducto = ({ productoId, onVolver }) => {
             peso: Number(producto.peso),
             precioUnitario: Number(producto.precioUnitario)
         };
-
-
-        fetch(`http://localhost:8080/api/productos/${productoId}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(productoParaEnviar)
-        })
-            .then(res => {
-                if (!res.ok) throw new Error("Error actualizando producto");
-                return res.json();
-            })
-            .then(() => setMensaje("Producto actualizado correctamente"))
-            .catch(() => setMensaje("Error al actualizar"));
+        try {
+            const res = await fetch(`http://localhost:8080/api/productos/${productoId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(productoParaEnviar)
+            });
+            if (!res.ok) throw new Error("Error actualizando producto");
+            setModalConfig({
+                isOpen: true,
+                title: "¡Éxito!",
+                message: "Producto actualizado correctamente.",
+                type: "success",
+                onClose: () => {
+                    setModalConfig({ isOpen: false, title: "", message: "", type: "info" });
+                    onVolver();
+                }
+            });
+        } catch {
+            setModalConfig({
+                isOpen: true,
+                title: "Error",
+                message: "Error al actualizar el producto.",
+                type: "error"
+            });
+        }
     };
 
-
-    if (!producto) return <p>Cargando...</p>;
+    if (!producto) return <p className="eliminar-cargando">Cargando...</p>;
 
     return (
-        <div>
-            <h2>Editar Producto</h2>
-
-            {mensaje && (
-                <p style={{ color: mensaje.includes("Error") ? "red" : "green" }}>
-                    {mensaje}
-                </p>
-            )}
-
-            <form onSubmit={handleSubmit}>
-                <label>Nombre:</label>
-                <input
-                    type="text"
-                    value={producto.nombre}
-                    onChange={(e) => setProducto({ ...producto, nombre: e.target.value })}
-                />
-
-                <label>Marca:</label>
-                <input
-                    type="text"
-                    value={producto.marca}
-                    onChange={(e) => setProducto({ ...producto, marca: e.target.value })}
-                />
-
-                <label>Descripción:</label>
-                <input
-                    type="text"
-                    value={producto.descripcion}
-                    onChange={(e) => setProducto({ ...producto, descripcion: e.target.value })}
-                />
-
-                <label>Unidades por Caja:</label>
-                <input
-                    type="number"
-                    value={producto.cantidadCaja}
-                    onChange={(e) => setProducto({ ...producto, cantidadCaja: e.target.value })}
-                />
-
-                <label>Peso:</label>
-                <input
-                    type="number"
-                    value={producto.peso}
-                    onChange={(e) => setProducto({ ...producto, peso: e.target.value })}
-                />
-
-                <label>Precio Unitario (S/):</label>
-                <input
-                    type="number"
-                    value={producto.precioUnitario || ''}
-                    onChange={(e) => setProducto({ ...producto, precioUnitario: e.target.value })}
-                    min="0"
-                    step="0.01"
-                />
-
-                <div className="botones">
-                    <button type="submit">Guardar Cambios</button>
-                    <button type="button" onClick={onVolver}>Cancelar</button>
+        <div className="editar-producto-container">
+            <h2 className="editar-titulo">Editar Producto</h2>
+            <form className="editar-form" onSubmit={handleSubmit}>
+                <div>
+                    <label>Nombre</label>
+                    <input
+                        type="text"
+                        name="nombre"
+                        value={producto.nombre}
+                        onChange={handleChange}
+                        required
+                    />
                 </div>
-
+                <div>
+                    <label>Marca</label>
+                    <input
+                        type="text"
+                        name="marca"
+                        value={producto.marca}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className="form-full">
+                    <label>Descripción</label>
+                    <input
+                        type="text"
+                        name="descripcion"
+                        value={producto.descripcion}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div>
+                    <label>Cantidad por caja</label>
+                    <input
+                        type="number"
+                        name="cantidadCaja"
+                        value={producto.cantidadCaja}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Peso (gramos)</label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="peso"
+                        value={producto.peso}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className="form-full">
+                    <label>Precio Unitario</label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="precioUnitario"
+                        value={producto.precioUnitario}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className="editar-botones">
+                    <button className="btn-guardar" type="submit">Guardar Cambios</button>
+                    <button className="btn-cancelar" type="button" onClick={onVolver}>Cancelar</button>
+                </div>
             </form>
+            <Modal
+                isOpen={modalConfig.isOpen}
+                onClose={modalConfig.onClose || (() => setModalConfig({ isOpen: false, title: "", message: "", type: "info" }))}
+                title={modalConfig.title}
+                message={modalConfig.message}
+                type={modalConfig.type}
+            />
         </div>
     );
 };

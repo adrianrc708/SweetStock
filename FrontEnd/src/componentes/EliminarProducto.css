@@ -1,34 +1,133 @@
 .eliminar-container {
     background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+    padding: 30px 50px 40px;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    max-width: 700px;
+    margin: 0 auto;
+    border: 1px solid #e8e8e8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.eliminar-titulo {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 28px;
+    text-align: center;
+    letter-spacing: -1px;
+}
+
+.eliminar-datos {
+    width: 100%;
+    background: #f4f7fb;
+    border-radius: 10px;
+    padding: 18px 22px 12px 22px;
+    margin-bottom: 26px;
+    font-size: 1.08rem;
+    color: #222;
+    box-sizing: border-box;
+    border: 1.5px solid #e3e8f0;
+    font-weight: 500;
+}
+
+.eliminar-datos div {
+    margin-bottom: 8px;
+}
+
+.eliminar-datos strong {
+    color: #6b7a90;
+    font-weight: 700;
+    min-width: 90px;
+    display: inline-block;
 }
 
 .advertencia {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
     color: #b30000;
-    font-weight: bold;
+    font-weight: 500;
+    background: #fff4f4;
+    border: 2.5px solid #ffbdbd;
+    border-radius: 10px;
+    padding: 16px 18px 16px 18px;
+    margin-bottom: 30px;
+    text-align: left;
+    font-size: 1.08rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.advertencia .icono-alerta {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.advertencia .alerta-titulo {
+    font-weight: 700;
+    color: #b30000;
+    margin-bottom: 2px;
+    font-size: 1.08rem;
 }
 
 .acciones {
     display: flex;
-    gap: 15px;
-    margin-top: 20px;
+    gap: 18px;
+    margin-top: 10px;
+    width: 100%;
+    justify-content: flex-end;
 }
 
 .btn-eliminar {
     background: #e60000;
     color: white;
-    padding: 10px 14px;
+    padding: 14px 28px;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
+    font-size: 1.08rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    transition: background 0.2s;
+    box-shadow: 0 2px 8px #e6000022;
+    letter-spacing: 0.2px;
+}
+
+.btn-eliminar:hover {
+    background: #b30000;
 }
 
 .btn-cancelar {
-    background: #ccc;
-    padding: 10px 14px;
+    background: #e9ecf1;
+    color: #3a4252;
+    padding: 14px 28px;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
+    font-size: 1.08rem;
+    font-weight: 700;
+    transition: background 0.2s;
+    box-shadow: 0 2px 8px #bfc7d622;
+}
+
+.btn-cancelar:hover {
+    background: #d3dbe6;
+}
+
+.eliminar-cargando {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #888;
+    margin-top: 40px;
+}
+
+.mensaje {
+    margin-top: 18px;
+    color: #b30000;
+    font-size: 1rem;
+    text-align: center;
 }

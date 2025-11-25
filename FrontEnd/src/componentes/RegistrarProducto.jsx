@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./RegistrarProducto.css";
+import Modal from "./Modal";
 
 const RegistrarProducto = ({ onVolver }) => {
     const [producto, setProducto] = useState({
@@ -10,6 +11,8 @@ const RegistrarProducto = ({ onVolver }) => {
         peso: "",
         precioUnitario: ""
     });
+
+    const [modalConfig, setModalConfig] = useState({ isOpen: false, title: "", message: "", type: "info" });
 
     const handleChange = (e) => {
         setProducto({
@@ -29,19 +32,35 @@ const RegistrarProducto = ({ onVolver }) => {
                 },
                 body: JSON.stringify(producto),
             });
-
+            const text = await res.text();
             if (!res.ok) {
-                const errorText = await res.text();
-                alert("Error: " + errorText);
+                setModalConfig({
+                    isOpen: true,
+                    title: "Error",
+                    message: text || "Error al registrar el producto",
+                    type: "error",
+                    onClose: () => setModalConfig({ isOpen: false, title: "", message: "", type: "info" })
+                });
                 return;
             }
-
-            alert("Producto registrado correctamente");
-            onVolver();
-
+            setModalConfig({
+                isOpen: true,
+                title: "¡Éxito!",
+                message: "Producto registrado correctamente.",
+                type: "success",
+                onClose: () => {
+                    setModalConfig({ isOpen: false, title: "", message: "", type: "info" });
+                    onVolver();
+                }
+            });
         } catch (error) {
-            console.error("Error:", error);
-            alert("Error al registrar el producto");
+            setModalConfig({
+                isOpen: true,
+                title: "Error",
+                message: "Error al registrar el producto",
+                type: "error",
+                onClose: () => setModalConfig({ isOpen: false, title: "", message: "", type: "info" })
+            });
         }
     };
 
@@ -50,7 +69,6 @@ const RegistrarProducto = ({ onVolver }) => {
             <h2>Registrar Producto</h2>
 
             <form className="registrar-form" onSubmit={handleSubmit}>
-                
                 <div>
                     <label>Nombre</label>
                     <input 
@@ -75,7 +93,7 @@ const RegistrarProducto = ({ onVolver }) => {
                     />
                 </div>
 
-                <div>
+                <div className="form-full">
                     <label>Descripción</label>
                     <input 
                         type="text"
@@ -94,6 +112,7 @@ const RegistrarProducto = ({ onVolver }) => {
                         value={producto.cantidadCaja}
                         onChange={handleChange}
                         placeholder="Ej. 12"
+                        required
                     />
                 </div>
 
@@ -109,7 +128,7 @@ const RegistrarProducto = ({ onVolver }) => {
                     />
                 </div>
 
-                <div>
+                <div className="form-full">
                     <label>Precio Unitario</label>
                     <input 
                         type="number"
@@ -118,6 +137,7 @@ const RegistrarProducto = ({ onVolver }) => {
                         value={producto.precioUnitario}
                         onChange={handleChange}
                         placeholder="Ej. 1.50"
+                        required
                     />
                 </div>
 
@@ -129,10 +149,16 @@ const RegistrarProducto = ({ onVolver }) => {
             <button className="btn-volver" onClick={onVolver}>
                 Volver
             </button>
+
+            <Modal
+                isOpen={modalConfig.isOpen}
+                onClose={modalConfig.onClose || (() => setModalConfig({ isOpen: false, title: "", message: "", type: "info" }))}
+                title={modalConfig.title}
+                message={modalConfig.message}
+                type={modalConfig.type}
+            />
         </div>
     );
 };
 
 export default RegistrarProducto;
-
-

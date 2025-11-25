@@ -9,11 +9,10 @@ const TablaInventario = ({ onEditar, onEliminar }) => {
     const [filtroNombre, setFiltroNombre] = useState('');
     const [filtroMarca, setFiltroMarca] = useState('');
 
-    // ← CORREGIDO: "usuario" en vez de "user"
+    // Se obtiene el usuario y se normaliza el rol para evitar problemas de formato
     const usuario = JSON.parse(sessionStorage.getItem("usuario"));
-    const rol = usuario?.rol || ""; // Admin, almacenero, vendedor
-
-    console.log("ROL DEL USUARIO:", rol);
+    let rol = usuario?.rol || "";
+    rol = rol.trim().toLowerCase();
 
     const fetchInventario = () => {
         setCargando(true);
@@ -47,6 +46,17 @@ const TablaInventario = ({ onEditar, onEliminar }) => {
         e.preventDefault();
         fetchInventario();
     };
+
+    // Paginación
+    const filasPorPagina = 10;
+    const [paginaActual, setPaginaActual] = useState(1);
+    const totalPaginas = Math.ceil(inventario.length / filasPorPagina);
+    const inventarioPaginado = inventario.slice((paginaActual - 1) * filasPorPagina, paginaActual * filasPorPagina);
+
+    // Resetear a página 1 cuando cambian los filtros
+    useEffect(() => {
+        setPaginaActual(1);
+    }, [filtroNombre, filtroMarca, inventario.length]);
 
     return (
         <div className="tabla-container">
@@ -94,59 +104,63 @@ const TablaInventario = ({ onEditar, onEliminar }) => {
             {!cargando && !error && (
                 <>
                     <div className="tabla-scroll-container">
-                        <table className="tabla-usuarios">
+                        <table className="tabla-usuarios" style={{ borderCollapse: 'separate', borderSpacing: 0, minWidth: 900 }}>
                             <thead>
-                            <tr>
+                            <tr style={{ height: '32px' }}>
                                 <th>ID PRODUCTO</th>
                                 <th>NOMBRE</th>
                                 <th>MARCA</th>
                                 <th>DESCRIPCIÓN</th>
-                                <th>UNID. POR CAJA</th>
-                                <th>CAJAS (STOCK)</th>
-                                <th>UNIDADES (STOCK)</th>
-                                <th>TOTAL UNIDADES</th>
-
-                                {/* Solo admin y almacenero ven ACCIONES */}
-                                {rol !== "vendedor" && <th>ACCIONES</th>}
+                                <th style={{ textAlign: 'right' }}>UNID. POR CAJA</th>
+                                <th style={{ textAlign: 'right' }}>CAJAS (STOCK)</th>
+                                <th style={{ textAlign: 'right' }}>UNIDADES (STOCK)</th>
+                                <th style={{ textAlign: 'right' }}>TOTAL UNIDADES</th>
+                                {/* La columna de acciones solo se muestra si el usuario no es vendedor */}
+                                {rol !== "vendedor" && <th style={{ textAlign: 'center' }}>ACCIONES</th>}
                             </tr>
                             </thead>
 
                             <tbody>
                             {inventario.length > 0 ? (
-                                inventario.map((item) => {
+                                inventarioPaginado.map((item, idx) => {
                                     const cantCajasStock = item.cantidadCaja || 0;
                                     const cantUnidadesStock = item.cantidadUnidad || 0;
                                     const unidPorCaja = item.producto?.cantidadCaja || 0;
-
                                     const totalUnidades = (cantCajasStock * unidPorCaja) + cantUnidadesStock;
-
+                                    const rowStyle = {
+                                        height: '32px',
+                                        background: idx % 2 === 0 ? '#f8f9fa' : '#fff',
+                                    };
                                     return (
-                                        <tr key={item.inventario_id}>
-                                            <td>{item.producto.producto_id}</td>
+                                        <tr key={item.inventario_id} style={rowStyle}>
+                                            <td style={{ textAlign: 'right' }}>{item.producto.producto_id}</td>
                                             <td>{item.producto.nombre}</td>
                                             <td>{item.producto.marca}</td>
                                             <td>{item.producto.descripcion}</td>
-                                            <td>{unidPorCaja}</td>
-                                            <td>{cantCajasStock}</td>
-                                            <td>{cantUnidadesStock}</td>
-                                            <td style={{ fontWeight: 'bold' }}>{totalUnidades}</td>
-
-                                            {/* Solo admin y almacenero ven botón de editar */}
+                                            <td style={{ textAlign: 'right' }}>{unidPorCaja}</td>
+                                            <td style={{ textAlign: 'right' }}>{cantCajasStock}</td>
+                                            <td style={{ textAlign: 'right' }}>{cantUnidadesStock}</td>
+                                            <td style={{ textAlign: 'right', fontWeight: 'bold' }}>{totalUnidades}</td>
                                             {rol !== "vendedor" && (
                                                 <td>
-                                                    <button
-                                                        className="admin-boton-pequeño editar"
-                                                        onClick={() => onEditar(item.producto.producto_id)}
-                                                    >
-                                                        Editar
-                                                    </button>
-                                                    {/* Botón ELIMINAR */}
-                                                    <button
-                                                        className="admin-boton-pequeño eliminar"
-                                                        onClick={() => onEliminar(item.producto.producto_id)}
-                                                    >
-                                                        🗑 Eliminar
-                                                    </button>
+                                                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', justifyContent: 'center' }}>
+                                                        <button
+                                                            className="admin-boton-pequeño editar"
+                                                            onClick={() => onEditar(item.producto.producto_id)}
+                                                            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                                                        >
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+                                                            Editar
+                                                        </button>
+                                                        <button
+                                                            className="admin-boton-pequeño eliminar"
+                                                            onClick={() => onEliminar(item.producto.producto_id)}
+                                                            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                                                        >
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                                                            Eliminar
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             )}
                                         </tr>
@@ -154,7 +168,7 @@ const TablaInventario = ({ onEditar, onEliminar }) => {
                                 })
                             ) : (
                                 <tr>
-                                    <td colSpan="8" style={{ textAlign: 'center', fontStyle: 'italic' }}>
+                                    <td colSpan={rol !== "vendedor" ? 9 : 8} style={{ textAlign: 'center', fontStyle: 'italic', height: '32px' }}>
                                         No se encontraron productos en el inventario que coincidan con los filtros.
                                     </td>
                                 </tr>
@@ -162,6 +176,28 @@ const TablaInventario = ({ onEditar, onEliminar }) => {
                             </tbody>
                         </table>
                     </div>
+
+                    {inventario.length > filasPorPagina && (
+                        <div className="paginacion">
+                            <button
+                                className="paginacion-boton"
+                                onClick={() => setPaginaActual(prev => Math.max(prev - 1, 1))}
+                                disabled={paginaActual === 1}
+                            >
+                                ← Anterior
+                            </button>
+                            <div className="paginacion-info">
+                                Página {paginaActual} de {totalPaginas} ({inventario.length} productos)
+                            </div>
+                            <button
+                                className="paginacion-boton"
+                                onClick={() => setPaginaActual(prev => Math.min(prev + 1, totalPaginas))}
+                                disabled={paginaActual === totalPaginas}
+                            >
+                                Siguiente →
+                            </button>
+                        </div>
+                    )}
                 </>
             )}
         </div>
