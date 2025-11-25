@@ -22,4 +22,8 @@ public interface InventarioRepository extends JpaRepository<Inventario, Integer>
     List<Inventario> findReporteFilters(
             @Param("productoId") Integer productoId,
             @Param("marca") String marca);
+    
+    @Query("SELECT i FROM Inventario i WHERE i.producto.producto_id = :productoId")
+    Inventario findByProductoId(@Param("productoId") Integer productoId);
+
 }

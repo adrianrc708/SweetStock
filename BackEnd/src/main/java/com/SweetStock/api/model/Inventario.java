@@ -7,7 +7,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.JoinColumn;
-
 @Entity
 public class Inventario {
 
@@ -26,7 +25,8 @@ public class Inventario {
     private Integer idMuelle;
 
     @OneToOne
-    @JoinColumn(name = "producto_id", referencedColumnName = "Producto_id")
+    @JoinColumn(name = "producto_id", nullable = true, unique = true)
+
     private Producto producto;
 
     // Constructores

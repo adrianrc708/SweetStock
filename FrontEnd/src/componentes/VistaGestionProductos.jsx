@@ -4,6 +4,7 @@ import TablaInventario from "./TablaInventario";
 import ActualizarStock from "./ActualizarStock";
 import EditarProducto from './EditarProducto';
 import RegistrarProducto from './RegistrarProducto';
+import EliminarProducto from './EliminarProducto';
 
 const VistaGestionProductos = ({ onVolver, usuario }) => {
     const [productoId, setProductoId] = useState(null);
@@ -17,6 +18,10 @@ const VistaGestionProductos = ({ onVolver, usuario }) => {
                         onEditar={(id) => {
                             setProductoId(id);  // Se modificó el case 'ver', antes:  return <TablaInventario />;
                             setVista('editar');
+                        }}
+                        onEliminar={(id) => {
+                            setProductoId(id);
+                            setVista('eliminar');
                         }} 
                     />
                 );
@@ -27,6 +32,15 @@ const VistaGestionProductos = ({ onVolver, usuario }) => {
                         onVolver={() => setVista('ver')}
                     />
                 );
+
+            case 'eliminar':
+                return (
+                    <EliminarProducto
+                        productoId={productoId}
+                        onVolver={() => setVista('ver')}
+                    />
+                );
+
             case 'actualizar':
                 return <ActualizarStock usuario={usuario} />;
 

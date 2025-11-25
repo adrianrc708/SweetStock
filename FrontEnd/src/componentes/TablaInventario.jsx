@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './AdminPanel.css';
 
-const TablaInventario = ({ onEditar }) => {
+const TablaInventario = ({ onEditar, onEliminar }) => {
     const [inventario, setInventario] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
@@ -139,6 +139,13 @@ const TablaInventario = ({ onEditar }) => {
                                                         onClick={() => onEditar(item.producto.producto_id)}
                                                     >
                                                         Editar
+                                                    </button>
+                                                    {/* Botón ELIMINAR */}
+                                                    <button
+                                                        className="admin-boton-pequeño eliminar"
+                                                        onClick={() => onEliminar(item.producto.producto_id)}
+                                                    >
+                                                        🗑 Eliminar
                                                     </button>
                                                 </td>
                                             )}

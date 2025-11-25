@@ -89,4 +89,41 @@ public class ProductoController {
         return ResponseEntity.ok(guardado);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
+
+        // 1. Buscar producto
+        Optional<Producto> optional = productoRepository.findById(id);
+        if (optional.isEmpty()) {
+            return ResponseEntity.badRequest().body("Producto no encontrado");
+        }
+
+        Producto producto = optional.get();
+
+        // 2. Buscar inventario asociado
+        Inventario inventario = inventarioRepository.findByProductoId(id);
+        if (inventario == null) {
+            return ResponseEntity.badRequest().body("Este producto no tiene inventario asociado");
+        }
+
+        // 3. Validar stock para evitar eliminación incorrecta
+        if (inventario.getCantidadCaja() > 0 || inventario.getCantidadUnidad() > 0) {
+            return ResponseEntity.badRequest().body(
+                    "No se puede eliminar el producto porque aún tiene stock en inventario"
+            );
+        }
+        
+        // 4. Romper relación bidireccional (EVITA ERROR 500)
+        producto.setInventario(null);
+        productoRepository.save(producto);
+
+        // 5. Eliminar inventario primero (por la relación OneToOne)
+        inventarioRepository.delete(inventario);
+
+        // 6. Eliminar producto
+        productoRepository.delete(producto);
+
+        return ResponseEntity.ok("Producto eliminado correctamente");
+    }
+
 }
